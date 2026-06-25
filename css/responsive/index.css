@@ -1,0 +1,84 @@
+/* 작업 목록 반응형 — 태블릿(900px 이하) & 모바일(640px 이하) */
+
+@media (max-width: 900px) {
+  .portfolio-heading {
+    grid-template-columns: 1fr;
+    min-height: 470px;
+  }
+
+  .portfolio-heading > p:last-child {
+    justify-self: start;
+  }
+
+  .portfolio-catalog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .portfolio-heading {
+    min-height: 400px;
+    padding: 3.5rem 0 3rem;
+  }
+
+  .portfolio-heading h1 {
+    font-size: clamp(2.9rem, 13vw, 4rem);
+    line-height: 0.9;
+  }
+
+  .portfolio-heading > p:last-child {
+    max-width: 22rem;
+  }
+
+  .portfolio-catalog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.4rem 0.85rem;
+  }
+
+  .portfolio-card > div {
+    display: block;
+    padding-top: 0.7rem;
+    margin-top: 0.55rem;
+  }
+
+  .portfolio-card h2 {
+    font-size: clamp(0.68rem, 3.1vw, 0.78rem);
+    line-height: 1.35;
+    letter-spacing: 0.04em;
+  }
+
+  .portfolio-card p {
+    margin-top: 0.25rem;
+    font-size: clamp(0.62rem, 2.8vw, 0.72rem);
+    white-space: normal;
+  }
+
+  .portfolio-card figure span {
+    top: 0.65rem;
+    left: 0.65rem;
+    width: 32px;
+    height: 32px;
+    font-size: 0.58rem;
+  }
+
+  .catalog-cta {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .catalog-cta a {
+    min-height: 64px;
+    justify-self: start;
+  }
+}
+
+@media (hover: none) {
+  .portfolio-card:hover img {
+    filter: grayscale(1);
+    transform: none;
+  }
+
+  .portfolio-card:hover h2 {
+    letter-spacing: inherit;
+  }
+}

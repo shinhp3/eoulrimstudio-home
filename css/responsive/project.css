@@ -1,0 +1,65 @@
+/* 프로젝트 상세 반응형 */
+
+@media (max-width: 900px) {
+  .detail-gallery {
+    gap: 0.75rem;
+  }
+
+  .detail-heading {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .detail-facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .detail-gallery {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+
+  .detail-heading {
+    padding-top: 1.75rem;
+  }
+
+  .detail-heading h1 {
+    font-size: clamp(1.55rem, 6.5vw, 2.25rem);
+    line-height: 1.12;
+  }
+
+  .detail-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-facts p {
+    min-height: 58px;
+    justify-content: center;
+  }
+
+  .detail-facts small {
+    font-size: 0.68rem;
+  }
+
+  .detail-story {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
+  .detail-nav {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding-bottom: clamp(4rem, 12vw, 6rem);
+  }
+
+  .detail-nav-link {
+    font-size: clamp(1.35rem, 6.5vw, 1.85rem);
+    min-height: 52px;
+  }
+
+  .detail-nav > .detail-nav-link:not(.detail-nav-link--back) {
+    justify-self: start;
+  }
+}

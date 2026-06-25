@@ -1,0 +1,176 @@
+/* 작업 목록 페이지 (index.html) */
+
+/* --- 페이지 레이아웃 --- */
+
+.portfolio-page {
+  padding-inline: max(var(--pad), calc((100vw - 1120px) / 2));
+}
+
+/* --- 상단 큰 제목 영역 (h1, 소제목) --- */
+
+.portfolio-heading {
+  min-height: clamp(340px, 36vw, 460px);
+  padding: clamp(2rem, 4vw, 3.5rem) 0 3rem;
+  display: grid;
+  grid-template-columns: 1.5fr 0.5fr;
+  align-content: end;
+  gap: 3rem;
+}
+
+.portfolio-heading .eyebrow {
+  grid-column: 1 / -1;
+  margin-bottom: auto;
+}
+
+.portfolio-heading h1 {
+  margin: 0;
+  font-size: clamp(3.6rem, 7.2vw, 7.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+  font-weight: 500;
+}
+
+.portfolio-heading h1 span {
+  display: block;
+  white-space: nowrap;
+}
+
+.portfolio-heading > p:last-child {
+  margin: 0 0 0.4rem;
+  color: var(--muted);
+  align-self: end;
+  font-size: 0.94rem;
+  line-height: 1.75;
+  max-width: 29rem;
+}
+
+/* --- 포트폴리오 카드 그리드 --- */
+
+.portfolio-catalog {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(3rem, 6vw, 6rem) clamp(1rem, 2vw, 2rem);
+  padding-bottom: clamp(7rem, 12vw, 12rem);
+}
+
+.portfolio-card {
+  display: block;
+  min-width: 0;
+}
+
+.portfolio-card figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #e7e7e7;
+}
+
+.portfolio-card figure:after {
+  content: "프로젝트 보기";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(17, 17, 15, 0.68);
+  color: #fff;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-gentle);
+}
+
+.portfolio-card figure span {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 0.68rem;
+  z-index: 2;
+  transition: transform var(--duration-slow) var(--ease-smooth);
+}
+
+.portfolio-card img {
+  transition:
+    transform calc(var(--duration-slow) + 0.1s) var(--ease-smooth),
+    filter var(--duration-base) var(--ease-gentle);
+}
+
+.portfolio-card:hover img {
+  transform: scale(1.055);
+  filter: grayscale(1) contrast(1.05);
+}
+
+.portfolio-card:hover figure:after {
+  opacity: 1;
+}
+
+.portfolio-card:hover figure span {
+  transform: rotate(12deg) scale(1.08);
+}
+
+.portfolio-card > div {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ink);
+  margin-top: 0.75rem;
+}
+
+.portfolio-card h2 {
+  margin: 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.09em;
+  font-weight: 600;
+  transition: letter-spacing var(--duration-base) var(--ease-smooth);
+}
+
+.portfolio-card:hover h2 {
+  letter-spacing: 0.14em;
+}
+
+.portfolio-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* --- 하단 문의 유도 --- */
+
+.catalog-cta {
+  border-top: 1px solid var(--ink);
+  padding: clamp(5rem, 8vw, 8rem) 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+.catalog-cta p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.catalog-cta a {
+  font-size: clamp(1.35rem, 2.4vw, 2.6rem);
+  letter-spacing: -0.03em;
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.65rem;
+  justify-self: end;
+  min-height: 58px;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 0.6rem;
+}
+
+.catalog-cta a span {
+  flex-shrink: 0;
+}

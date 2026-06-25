@@ -9,25 +9,24 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/common.css?v=4">
+  <link rel="stylesheet" href="css/responsive/common.css?v=4">
+  <link rel="stylesheet" href="css/index.css?v=4">
+  <link rel="stylesheet" href="css/responsive/index.css?v=4">
+  <script src="js/layout.js" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body class="inner-page">
   <a class="skip-link" href="#main">본문 바로가기</a>
   <div class="page-progress" aria-hidden="true"><i></i></div>
   <div class="cursor" aria-hidden="true"><span>보기</span></div>
-  <header class="site-header scrolled inner-header" data-header>
-    <a class="brand" href="index.html" aria-label="어울림 홈"><img class="brand-logo brand-logo-black" src="assets/object/logo-black.png" alt="" width="325" height="68"><img class="brand-logo brand-logo-white" src="assets/object/logo-white.png" alt="" width="325" height="68"></a>
-    <nav class="desktop-nav" aria-label="주요 메뉴"><a href="index.html" aria-current="page">작업</a><a href="about.html">소개</a><a href="about.html#process">제작 과정</a></nav>
-    <a class="header-contact" href="about.html#contact">문의하기 <span aria-hidden="true">↗</span></a>
-    <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu"><span class="sr-only">메뉴 열기</span><i></i><i></i></button>
-    <nav class="mobile-menu" id="mobile-menu" aria-label="모바일 메뉴"><a href="index.html" aria-current="page">작업</a><a href="about.html">소개</a><a href="about.html#process">제작 과정</a><a href="about.html#contact">문의하기</a></nav>
-  </header>
+
+  <div data-site-header data-nav="work" data-header-variant="inner"></div>
 
   <main id="main" class="portfolio-page">
     <header class="portfolio-heading">
       <p class="eyebrow">주요 작업 · 2023—2026</p>
-      <h1><span>형태와 몰드,</span><span>그리고 가능성.</span></h1>
+      <h1><span> Ceramic Mold,</span><span>Projects.</span></h1>
       <p>형태의 의도와 실제 제작 환경을 함께 고민한 어울림의 석고몰드 프로젝트입니다.</p>
     </header>
 
@@ -63,6 +62,7 @@
       <a href="about.html#contact">제작 문의하기 <span>↗</span></a>
     </section>
   </main>
-  <footer class="inner-footer"><a class="brand" href="index.html" aria-label="어울림 홈"><img class="brand-logo brand-logo-black" src="assets/object/logo-black.png" alt="" width="325" height="68"><img class="brand-logo brand-logo-white" src="assets/object/logo-white.png" alt="" width="325" height="68"></a><p>© 2026 어울림.</p><a href="#top">맨 위로 ↑</a></footer>
+
+  <div data-site-footer data-link-label="맨 위로 ↑" data-link-href="#top"></div>
 </body>
 </html>
