@@ -5,13 +5,15 @@
  *   <div data-site-header data-nav="work|about" data-header-variant="inner|hero"></div>
  *   <div data-site-footer data-footer="inner|contact"></div>
  */
+const CONTACT_URL = "https://claymaker.eoulrimstudio.com/";
+
 const NAV_ITEMS = [
   { id: "work", href: "index.html", label: "작업" },
   { id: "about", href: "about.html", label: "소개", aboutHref: "#top" },
   { id: "process", href: "about.html#process", label: "제작 과정" },
   {
     id: "contact",
-    href: "about.html#contact",
+    href: CONTACT_URL,
     label: "문의하기",
     mobileOnly: true,
   },
@@ -25,7 +27,7 @@ function navHref(item, onAboutPage) {
 function renderSiteHeader({
   current = "work",
   variant = "inner",
-  contactHref = "about.html#contact",
+  contactHref = CONTACT_URL,
 } = {}) {
   const onAboutPage = current === "about" || current === "process";
   const headerClass = [
@@ -44,14 +46,11 @@ function renderSiteHeader({
     .join("");
 
   const mobileLinks = NAV_ITEMS.map((item) => {
-    const href =
-      item.id === "contact"
-        ? onAboutPage
-          ? "#contact"
-          : contactHref
-        : navHref(item, onAboutPage);
+    const href = item.id === "contact" ? contactHref : navHref(item, onAboutPage);
     const currentAttr = item.id === current ? ' aria-current="page"' : "";
-    return `<a href="${href}"${currentAttr}>${item.label}</a>`;
+    const externalAttr =
+      item.id === "contact" ? ' target="_blank" rel="noopener noreferrer"' : "";
+    return `<a href="${href}"${currentAttr}${externalAttr}>${item.label}</a>`;
   }).join("");
 
   return `
@@ -61,7 +60,7 @@ function renderSiteHeader({
     <img class="brand-logo brand-logo-white" src="assets/object/logo-white.png" alt="" width="325" height="68">
   </a>
   <nav class="desktop-nav" aria-label="주요 메뉴">${desktopLinks}</nav>
-  <a class="header-contact" href="${onAboutPage ? "#contact" : contactHref}">문의하기 <span aria-hidden="true">↗</span></a>
+  <a class="header-contact" href="${contactHref}" target="_blank" rel="noopener noreferrer">문의하기 <span aria-hidden="true">↗</span></a>
   <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu">
     <span class="sr-only">메뉴 열기</span><i></i><i></i>
   </button>
@@ -109,7 +108,7 @@ function mountLayout() {
   if (headerSlot) {
     const current = headerSlot.dataset.nav || "work";
     const variant = headerSlot.dataset.headerVariant || "inner";
-    const contactHref = headerSlot.dataset.contactHref || "about.html#contact";
+    const contactHref = headerSlot.dataset.contactHref || CONTACT_URL;
     headerSlot.outerHTML = renderSiteHeader({ current, variant, contactHref });
   }
 
