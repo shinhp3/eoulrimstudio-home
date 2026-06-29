@@ -52,11 +52,15 @@ function renderSiteHeader({
     .map((item) => {
       const href = navHref(item, onAboutPage);
       const currentAttr = item.id === current ? ' aria-current="page"' : "";
-      return `<a href="${href}"${currentAttr}>${item.label}</a>`;
+      const processClass = item.id === "process" ? " nav-link--process" : "";
+      return `<a class="nav-link${processClass}" href="${href}"${currentAttr}>${item.label}</a>`;
     })
     .join("");
 
-  const mobileLinks = NAV_ITEMS.map((item) => {
+  const mobileBarContact = `<a class="nav-link nav-link--contact-bar" href="${contactHref}" target="_blank" rel="noopener noreferrer">문의하기</a>`;
+
+  const mobileLinks = NAV_ITEMS.filter((item) => item.id !== "process")
+    .map((item) => {
     const href = item.id === "contact" ? contactHref : navHref(item, onAboutPage);
     const currentAttr = item.id === current ? ' aria-current="page"' : "";
     const externalAttr =
@@ -70,7 +74,7 @@ function renderSiteHeader({
     <img class="brand-logo brand-logo-black" src="assets/object/logo-black.png" alt="" width="325" height="68">
     <img class="brand-logo brand-logo-white" src="assets/object/logo-white.png" alt="" width="325" height="68">
   </a>
-  <nav class="desktop-nav" aria-label="주요 메뉴">${desktopLinks}</nav>
+  <nav class="desktop-nav" aria-label="주요 메뉴">${desktopLinks}${mobileBarContact}</nav>
   <a class="header-contact" href="${contactHref}" target="_blank" rel="noopener noreferrer">문의하기 <span aria-hidden="true">↗</span></a>
   <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu">
     <span class="sr-only">메뉴 열기</span><i></i><i></i>

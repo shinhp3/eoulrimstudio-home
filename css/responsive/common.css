@@ -1,5 +1,9 @@
 /* 공통 반응형 — 태블릿(900px 이하) & 모바일(640px 이하) */
 
+.nav-link--contact-bar {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .cursor {
     display: none;
@@ -33,7 +37,13 @@
     padding-inline: 0.12rem;
   }
 
-  .desktop-nav a[href*="process"] {
+  .desktop-nav a[href*="process"],
+  .desktop-nav .nav-link--process {
+    display: none;
+  }
+
+  .desktop-nav .nav-link--contact-bar {
+    display: flex;
     min-width: 58px;
   }
 

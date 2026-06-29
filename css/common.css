@@ -13,6 +13,7 @@
   --accent: #080808;
   --dark: #050505;
   --pad: clamp(1.25rem, 4vw, 4.5rem);
+  --page-gutter: max(var(--pad), calc((100vw - 1120px) / 2));
   --sans: "DM Sans", "Noto Sans KR", sans-serif;
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-gentle: cubic-bezier(0.33, 1, 0.68, 1);
@@ -372,6 +373,18 @@ html.custom-cursor * {
   background: var(--bg);
 }
 
+.inner-page .site-header,
+.inner-page .site-header.scrolled,
+.about-page .site-header,
+.about-page .site-header.scrolled {
+  padding-inline: var(--page-gutter);
+}
+
+.inner-page .site-footer,
+.about-page .site-footer {
+  padding-inline: var(--page-gutter);
+}
+
 .inner-header {
   color: var(--ink) !important;
   background: rgba(244, 243, 239, 0.94) !important;
@@ -383,7 +396,7 @@ html.custom-cursor * {
 }
 
 .inner-footer {
-  padding: 2rem var(--pad);
+  padding: 2rem var(--page-gutter);
   border-top: 1px solid var(--line);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -412,7 +425,7 @@ html.custom-cursor * {
 }
 
 .site-footer {
-  padding: 2rem max(var(--pad), calc((100vw - 1120px) / 2));
+  padding: 2rem var(--page-gutter);
   border-top: 1px solid var(--line);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

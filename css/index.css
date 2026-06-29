@@ -3,7 +3,7 @@
 /* --- 페이지 레이아웃 --- */
 
 .portfolio-page {
-  padding-inline: max(var(--pad), calc((100vw - 1120px) / 2));
+  padding-inline: var(--page-gutter);
 }
 
 /* --- 상단 큰 제목 영역 (h1, 소제목) --- */
@@ -122,6 +122,7 @@
   aspect-ratio: 1;
   overflow: hidden;
   background: #e7e7e7;
+  isolation: isolate;
 }
 
 .portfolio-card figure:after {
@@ -154,6 +155,8 @@
 }
 
 .portfolio-card img {
+  transform: scale(1);
+  transform-origin: center center;
   transition:
     transform calc(var(--duration-slow) + 0.1s) var(--ease-smooth),
     filter var(--duration-base) var(--ease-gentle);
@@ -180,6 +183,7 @@
   padding-top: 1rem;
   border-top: 1px solid var(--ink);
   margin-top: 0.75rem;
+  transform: none;
 }
 
 .portfolio-card h2 {
@@ -187,11 +191,6 @@
   font-size: 0.82rem;
   letter-spacing: 0.09em;
   font-weight: 600;
-  transition: letter-spacing var(--duration-base) var(--ease-smooth);
-}
-
-.portfolio-card:hover h2 {
-  letter-spacing: 0.14em;
 }
 
 .portfolio-card p {

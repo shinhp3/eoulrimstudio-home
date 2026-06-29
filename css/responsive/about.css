@@ -1,10 +1,6 @@
 /* 소개 페이지 반응형 */
 
 @media (max-width: 900px) {
-  .hero {
-    min-height: 620px;
-  }
-
   .hero h1 {
     font-size: clamp(2.8rem, 12vw, 4.8rem);
     line-height: 0.95;
@@ -67,13 +63,9 @@
 }
 
 @media (max-width: 640px) {
-  .hero {
-    padding-inline: var(--pad);
-  }
-
   .hero-content {
-    padding-top: 8rem;
-    padding-inline: clamp(0.25rem, 4vw, 1rem);
+    padding-top: calc(var(--header-height) + 1.75rem);
+    padding-bottom: 2rem;
   }
 
   .hero-lead {
@@ -86,11 +78,10 @@
   .expertise,
   .manifesto,
   .contact-inner {
-    padding-left: var(--pad);
-    padding-right: var(--pad);
+    padding-inline: var(--page-gutter);
   }
 
-  .hero-media img {
+  .hero-bg {
     object-position: center 35%;
   }
 
@@ -175,8 +166,7 @@
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: 1.5rem;
-    padding-left: var(--pad);
-    padding-right: var(--pad);
+    padding-inline: var(--page-gutter);
   }
 
   .site-footer p {
@@ -190,6 +180,14 @@
 
 @media (prefers-reduced-motion: reduce) {
   .studio-image img {
+    position: static;
+    top: auto;
+    height: 100%;
+    transform: none;
+  }
+
+  .hero-bg {
+    animation: none;
     transform: none;
   }
 }

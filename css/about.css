@@ -26,27 +26,48 @@
 .hero {
   --mx: 0px;
   --my: 0px;
-  --content-gutter: max(var(--pad), calc((100vw - 1120px) / 2));
+  --hero-bg-height: 84svh;
   position: relative;
-  min-height: 680px;
-  height: 100svh;
-  padding-inline: var(--content-gutter);
+  z-index: 1;
+  min-height: var(--hero-bg-height);
   color: #fff;
+}
+
+.hero-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--hero-bg-height);
+  z-index: 0;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .hero-media,
 .hero-shade {
-  position: absolute;
-  inset: 0;
   margin: 0;
 }
 
-.hero-media img {
+.hero-media {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(9, 9, 8, 0.42), rgba(9, 9, 8, 0.08) 58%),
+    linear-gradient(0deg, rgba(5, 5, 4, 0.35), transparent 45%);
+}
+
+.hero-bg {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  object-position: right center;
-  filter: none;
-  transform: translate3d(var(--mx), var(--my), 0) scale(1.04);
+  object-position: center;
+  transform: translate3d(var(--mx), var(--my), 0) scale(1);
   animation: heroIn 1.8s cubic-bezier(0.2, 0.65, 0.2, 1) both;
   transition:
     transform calc(var(--duration-slow) + 0.1s) var(--ease-smooth),
@@ -54,23 +75,32 @@
   will-change: transform;
 }
 
-.hero-shade {
-  background:
-    linear-gradient(90deg, rgba(9, 9, 8, 0.42), rgba(9, 9, 8, 0.08) 58%),
-    linear-gradient(0deg, rgba(5, 5, 4, 0.35), transparent 45%);
-}
-
 .hero-content {
   position: relative;
-  z-index: 1;
-  height: 100%;
+  z-index: 2;
+  min-height: var(--hero-bg-height);
   max-width: 100%;
-  padding:
-    clamp(8rem, 16vh, 11rem)
-    clamp(0.5rem, 2.5vw, 1.5rem)
-    clamp(2rem, 5vh, 4rem);
+  padding-inline: var(--page-gutter);
+  padding-top: clamp(8rem, 16vh, 11rem);
+  padding-bottom: clamp(2rem, 5vh, 4rem);
   display: flex;
   flex-direction: column;
+  pointer-events: none;
+}
+
+.hero-content a,
+.hero-content button {
+  pointer-events: auto;
+}
+
+.about-page main {
+  position: relative;
+  z-index: 1;
+}
+
+.about-page main > section:not(.hero) {
+  position: relative;
+  z-index: 2;
 }
 
 .hero h1 {
@@ -102,20 +132,25 @@
 
 .image-label {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   top: calc(var(--header-height) + 22px);
-  right: 0;
+  right: var(--page-gutter);
   font-size: 0.62rem;
   letter-spacing: 0.14em;
   writing-mode: vertical-rl;
   color: rgba(255, 255, 255, 0.62);
 }
 
+.principles,
+.process {
+  background: var(--bg);
+}
+
 .section-pad,
 .expertise,
 .manifesto,
 .contact-inner {
-  padding-inline: max(var(--pad), calc((100vw - 1120px) / 2));
+  padding-inline: var(--page-gutter);
 }
 
 .section-pad {
@@ -147,6 +182,25 @@
 
 .section-head.compact h2 {
   font-size: clamp(2.2rem, 3.4vw, 3.6rem);
+}
+
+.about-intro {
+  position: relative;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.about-intro .eyebrow {
+  color: #3a3a3a;
+}
+
+.about-intro .section-intro,
+.about-intro .intro-note p {
+  color: #444;
+}
+
+.about-intro .intro-note span {
+  color: var(--ink);
 }
 
 .section-intro {
@@ -201,7 +255,7 @@
 }
 
 .studio {
-  padding: clamp(6rem, 10vw, 9rem) max(var(--pad), calc((100vw - 1120px) / 2));
+  padding: clamp(6rem, 10vw, 9rem) var(--page-gutter);
   background: var(--paper);
   display: grid;
   grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1fr);
@@ -219,6 +273,13 @@
 }
 
 .studio-image img {
+  position: absolute;
+  left: 0;
+  top: -56px;
+  width: 100%;
+  height: calc(100% + 112px);
+  object-fit: cover;
+  object-position: center;
   transform: translate3d(0, var(--parallax-y), 0) scale(1.025);
   transition: transform calc(var(--duration-slow) + 0.1s) var(--ease-smooth);
   will-change: transform;

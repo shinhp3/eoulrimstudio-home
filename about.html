@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/common.css?v=9">
-  <link rel="stylesheet" href="css/responsive/common.css?v=9">
-  <link rel="stylesheet" href="css/about.css?v=4">
-  <link rel="stylesheet" href="css/responsive/about.css?v=4">
+  <link rel="stylesheet" href="css/common.css?v=10">
+  <link rel="stylesheet" href="css/responsive/common.css?v=10">
+  <link rel="stylesheet" href="css/about.css?v=25">
+  <link rel="stylesheet" href="css/responsive/about.css?v=16">
   <script src="js/layout.js" defer></script>
   <script src="script.js" defer></script>
 </head>
@@ -24,15 +24,16 @@
 
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-title">
-      <figure class="hero-media">
-        <img src="assets/picture/bg_2.png" alt="어울림 스튜디오 작업 분위기" fetchpriority="high">
-      </figure>
-      <div class="hero-shade"></div>
+      <div class="hero-backdrop" aria-hidden="true">
+        <figure class="hero-media">
+          <img class="hero-bg" src="assets/picture/bg_mix3.png" alt="" decoding="async" fetchpriority="high">
+        </figure>
+        <div class="hero-shade"></div>
+      </div>
       <div class="hero-content">
         <h1 id="hero-title"><span>석고를</span><span>더 쉽게.</span></h1>
         <p class="hero-lead">도예 작업 경험을 바탕으로<br> 사용하기 편리한 석고몰드를<br> 설계하고 제작합니다.</p>
       </div>
-      <span class="image-label">01 — 대표 작업</span>
     </section>
 
     <section class="about-intro section-pad" id="work" aria-labelledby="work-title">
@@ -61,7 +62,7 @@
     </section>
 
     <section class="studio" id="studio" aria-labelledby="studio-title">
-      <div class="studio-image reveal"><img src="assets/portfolio-06.svg" alt="어울림 스튜디오 작업 장면" loading="lazy"><span>어울림 스튜디오 / 서울</span></div>
+      <div class="studio-image reveal"><img src="assets/picture/fail.jpg" alt="어울림 스튜디오 작업 장면" loading="lazy"><span>어울림 스튜디오 / 부산</span></div>
       <div class="studio-copy section-pad reveal">
         <p class="eyebrow">어울림 소개</p>
         <h2 id="studio-title">우리는 같은 문제를<br>겪어왔습니다.</h2>
@@ -72,7 +73,7 @@
     </section>
 
     <section class="principles section-pad" aria-labelledby="principles-title">
-      <div class="section-head compact reveal"><div><p class="eyebrow">어울림의 차이</p><h2 id="principles-title">설계의 기준</h2></div><p class="section-intro">좋은 몰드는 결과뿐 아니라 반복되는 작업의 효율까지 달라지게 합니다.</p></div>
+      <div class="section-head compact reveal"><div><p class="eyebrow">어울림의 차이</p><h2 id="principles-title">설계의 기준</h2></div><p class="section-intro">좋은 몰드는 결과뿐 아니라<br> 반복되는 작업의 효율까지 달라지게 합니다.</p></div>
       <div class="principle-list">
         <article class="reveal"><span>01</span><h3>사용 경험 기반</h3><p>슬립캐스팅과 석고 작업을 해온 도예가가 직접 설계합니다.</p></article>
         <article class="reveal"><span>02</span><h3>디지털 정밀 설계</h3><p>Rhino 기반 3D 모델링과 FDM 출력 기술을 활용합니다.</p></article>
