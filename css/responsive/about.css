@@ -171,21 +171,20 @@
     padding-inline: 0.75rem;
   }
 
-  footer {
+  .site-footer {
     grid-template-columns: 1fr auto;
-    gap: 2rem;
+    align-items: center;
+    gap: 1.5rem;
     padding-left: var(--pad);
     padding-right: var(--pad);
   }
 
-  footer p {
+  .site-footer p {
     display: none;
   }
 
-  footer div {
-    flex-direction: column;
-    gap: 0.2rem;
-    text-align: right;
+  .footer-social {
+    gap: 0.75rem;
   }
 }
 

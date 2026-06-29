@@ -5,6 +5,34 @@ const sectionNavLinks = [...document.querySelectorAll('.desktop-nav a, .mobile-m
 const processSection = document.querySelector('#process');
 
 const progressBar = document.querySelector('.page-progress i');
+const scrollTopBtn = document.querySelector('.scroll-top');
+const SCROLL_TOP_THRESHOLD = 400;
+const SCROLL_TOP_IDLE_MS = 2800;
+let scrollTopIdleTimer = null;
+
+const scheduleScrollTopFade = () => {
+  if (!scrollTopBtn) return;
+  clearTimeout(scrollTopIdleTimer);
+  scrollTopIdleTimer = setTimeout(() => {
+    if (scrollTopBtn.classList.contains('is-visible')) {
+      scrollTopBtn.classList.add('is-fading');
+    }
+  }, SCROLL_TOP_IDLE_MS);
+};
+
+const updateScrollTop = (scrollY = window.scrollY) => {
+  if (!scrollTopBtn) return;
+
+  if (scrollY <= SCROLL_TOP_THRESHOLD) {
+    scrollTopBtn.classList.remove('is-visible', 'is-fading');
+    clearTimeout(scrollTopIdleTimer);
+    return;
+  }
+
+  scrollTopBtn.classList.add('is-visible');
+  scrollTopBtn.classList.remove('is-fading');
+  scheduleScrollTopFade();
+};
 const hero = document.querySelector('.hero');
 const cursor = document.querySelector('.cursor');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -15,6 +43,7 @@ const updateHeader = (scrollY = window.scrollY) => {
   header.classList.toggle('scrolled', window.scrollY > 40 || document.body.classList.contains('inner-page'));
   const scrollable = document.documentElement.scrollHeight - window.innerHeight;
   progressBar.style.transform = `scaleX(${scrollable > 0 ? scrollY / scrollable : 0})`;
+  updateScrollTop(scrollY);
 };
 
 const updateSectionNavigation = () => {
@@ -34,6 +63,22 @@ const updateSectionNavigation = () => {
 
 updateHeader();
 updateSectionNavigation();
+
+if (scrollTopBtn) {
+  scrollTopBtn.addEventListener('mouseenter', () => {
+    scrollTopBtn.classList.remove('is-fading');
+    clearTimeout(scrollTopIdleTimer);
+  });
+
+  scrollTopBtn.addEventListener('mouseleave', () => {
+    if (scrollTopBtn.classList.contains('is-visible')) scheduleScrollTopFade();
+  });
+
+  scrollTopBtn.addEventListener('focus', () => scrollTopBtn.classList.remove('is-fading'));
+  scrollTopBtn.addEventListener('blur', () => {
+    if (scrollTopBtn.classList.contains('is-visible')) scheduleScrollTopFade();
+  });
+}
 
 if (menuButton && mobileMenu) {
   menuButton.addEventListener('click', () => {

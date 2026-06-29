@@ -467,38 +467,8 @@
   color: var(--ink);
 }
 
-footer {
-  padding: 2rem max(var(--pad), calc((100vw - 1120px) / 2));
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  align-items: end;
-}
-
 .brand-light {
   color: #fff;
-}
-
-footer p {
-  margin: 0;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-}
-
-footer div {
-  justify-self: end;
-  display: flex;
-  gap: 1.5rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.75rem;
-}
-
-footer div a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
 }
 
 @keyframes heroIn {

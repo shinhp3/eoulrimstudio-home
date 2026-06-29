@@ -3,9 +3,20 @@
  *
  * HTML 사용법:
  *   <div data-site-header data-nav="work|about" data-header-variant="inner|hero"></div>
- *   <div data-site-footer data-footer="inner|contact"></div>
+ *   <div data-site-footer data-footer="inner|contact|light"></div>
  */
 const CONTACT_URL = "https://claymaker.eoulrimstudio.com/";
+
+const FOOTER_SOCIAL_ICONS = {
+  dark: {
+    instagram: "assets/object/instagram_logo.svg",
+    naver: "assets/object/naver_logo.svg",
+  },
+  light: {
+    instagram: "assets/object/insta_black_logo.svg",
+    naver: "assets/object/naver_black_logo.svg",
+  },
+};
 
 const NAV_ITEMS = [
   { id: "work", href: "index.html", label: "작업" },
@@ -89,16 +100,34 @@ function renderInnerFooter({
 </footer>`.trim();
 }
 
-function renderContactFooter() {
+function renderSocialFooter({ theme = "dark" } = {}) {
+  const isLight = theme === "light";
+  const icons = FOOTER_SOCIAL_ICONS[theme] || FOOTER_SOCIAL_ICONS.dark;
+  const brandClass = isLight ? "brand" : "brand brand-light";
+  const copyright = isLight
+    ? "© 2026 어울림."
+    : "© 2026 어울림. 모든 권리 보유.";
+
   return `
-<footer>
-  <a class="brand brand-light" href="index.html" aria-label="어울림 홈">
+<footer class="site-footer site-footer--${theme}">
+  <a class="${brandClass}" href="index.html" aria-label="어울림 홈">
     <img class="brand-logo brand-logo-black" src="assets/object/logo-black.png" alt="" width="325" height="68">
     <img class="brand-logo brand-logo-white" src="assets/object/logo-white.png" alt="" width="325" height="68">
   </a>
-  <p>© 2026 어울림. 모든 권리 보유.</p>
-  <div><a href="#">인스타그램</a><a href="#">네이버 블로그</a></div>
+  <p>${copyright}</p>
+  <div class="footer-social">
+    <a class="footer-social-link" href="https://www.instagram.com/eoulrimstudio/" target="_blank" rel="noopener noreferrer" aria-label="인스타그램">
+      <img src="${icons.instagram}" alt="" width="22" height="22">
+    </a>
+    <a class="footer-social-link" href="https://smartstore.naver.com/eoulrimstudio" target="_blank" rel="noopener noreferrer" aria-label="네이버 스마트스토어">
+      <img src="${icons.naver}" alt="" width="22" height="22">
+    </a>
+  </div>
 </footer>`.trim();
+}
+
+function renderContactFooter() {
+  return renderSocialFooter({ theme: "dark" });
 }
 
 function mountLayout() {
@@ -118,10 +147,12 @@ function mountLayout() {
     footerSlot.outerHTML =
       kind === "contact"
         ? renderContactFooter()
-        : renderInnerFooter({
-            linkLabel: hasLink ? footerSlot.dataset.linkLabel || "맨 위로 ↑" : null,
-            linkHref: footerSlot.dataset.linkHref || "#top",
-          });
+        : kind === "light"
+          ? renderSocialFooter({ theme: "light" })
+          : renderInnerFooter({
+              linkLabel: hasLink ? footerSlot.dataset.linkLabel || "맨 위로 ↑" : null,
+              linkHref: footerSlot.dataset.linkHref || "#top",
+            });
   }
 }
 

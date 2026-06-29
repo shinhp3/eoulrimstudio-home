@@ -9,8 +9,8 @@
 /* --- 상단 큰 제목 영역 (h1, 소제목) --- */
 
 .portfolio-heading {
-  min-height: clamp(340px, 36vw, 460px);
-  padding: clamp(2rem, 4vw, 3.5rem) 0 3rem;
+  min-height: clamp(170px, 18vw, 230px);
+  padding: clamp(1rem, 2vw, 1.75rem) 0 3rem;
   display: grid;
   grid-template-columns: 1.5fr 0.5fr;
   align-content: end;
@@ -173,4 +173,69 @@
 
 .catalog-cta a span {
   flex-shrink: 0;
+}
+
+.scroll-top {
+  position: fixed;
+  right: var(--pad);
+  bottom: clamp(1.5rem, 4vw, 2.5rem);
+  z-index: 115;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition:
+    opacity 0.55s var(--ease-gentle),
+    visibility 0.55s var(--ease-gentle),
+    transform 0.55s var(--ease-gentle),
+    border-color var(--duration-fast) var(--ease-gentle),
+    background var(--duration-fast) var(--ease-gentle);
+}
+
+.scroll-top span {
+  font-size: 1.05rem;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+.scroll-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.scroll-top.is-visible.is-fading {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(10px);
+}
+
+.scroll-top:hover,
+.scroll-top:focus-visible {
+  border-color: var(--ink);
+  background: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-top {
+    transform: none;
+    transition:
+      opacity var(--duration-fast) var(--ease-gentle),
+      visibility var(--duration-fast) var(--ease-gentle);
+  }
+
+  .scroll-top.is-visible {
+    transform: none;
+  }
 }
