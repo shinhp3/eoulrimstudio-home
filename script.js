@@ -615,14 +615,3 @@ if (!reduceMotion && finePointer && cursor) {
     });
   }
 }
-
-const backLink = document.querySelector('[data-back-link]');
-if (backLink) {
-  backLink.addEventListener('click', (event) => {
-    const hasPreviousPage = window.history.length > 1 && document.referrer;
-    if (!hasPreviousPage) return;
-
-    event.preventDefault();
-    window.history.back();
-  });
-}
