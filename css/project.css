@@ -102,7 +102,8 @@ body.lightbox-open .cursor {
   padding: 0;
   border: 0;
   background: rgba(8, 8, 8, 0.92);
-  cursor: pointer;
+  cursor: default;
+  pointer-events: none;
 }
 
 .project-lightbox__dialog {
@@ -113,11 +114,10 @@ body.lightbox-open .cursor {
   max-height: 100dvh;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
   grid-template-areas:
     "toolbar toolbar toolbar"
-    "prev figure next"
-    "counter counter counter";
+    "prev figure next";
   align-items: center;
   gap: clamp(0.65rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.5rem);
 }
@@ -131,28 +131,70 @@ body.lightbox-open .cursor {
 .project-lightbox__figure {
   grid-area: figure;
   margin: 0;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
   min-height: 0;
   height: 100%;
-  touch-action: pan-y pinch-zoom;
+  max-height: 100%;
 }
 
-.project-lightbox__image {
+.project-lightbox__viewport {
+  width: 100%;
+  overflow: hidden;
+  flex: 0 1 auto;
+  cursor: grab;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+}
+
+.project-lightbox__viewport.is-dragging {
+  cursor: grabbing;
+  touch-action: none;
+}
+
+.project-lightbox__track {
+  display: flex;
+  will-change: transform;
+}
+
+.project-lightbox__track.is-animating {
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-lightbox__slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-lightbox__slide img {
   display: block;
   max-width: 100%;
-  max-height: 100%;
+  max-height: min(calc(88vh - 12rem), 720px);
   width: auto;
   height: auto;
   object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .project-lightbox__nav--prev {
   grid-area: prev;
+  align-self: center;
+  justify-self: center;
 }
 
 .project-lightbox__nav--next {
   grid-area: next;
+  align-self: center;
+  justify-self: center;
 }
 
 .project-lightbox__close,
@@ -160,18 +202,31 @@ body.lightbox-open .cursor {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.28);
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
-  font-size: 1.35rem;
+  font-family: var(--sans);
+  font-size: 1.5rem;
+  font-weight: 400;
   line-height: 1;
   cursor: pointer;
   transition:
     border-color var(--duration-fast) var(--ease-gentle),
     background var(--duration-fast) var(--ease-gentle);
+}
+
+.project-lightbox__nav span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 1;
 }
 
 .project-lightbox__close {
@@ -180,19 +235,26 @@ body.lightbox-open .cursor {
 
 .project-lightbox__close:hover,
 .project-lightbox__close:focus-visible,
-.project-lightbox__nav:hover,
-.project-lightbox__nav:focus-visible {
+.project-lightbox__nav:hover:not(:disabled),
+.project-lightbox__nav:focus-visible:not(:disabled) {
   border-color: rgba(255, 255, 255, 0.7);
   background: rgba(255, 255, 255, 0.16);
 }
 
+.project-lightbox__nav:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
 .project-lightbox__counter {
-  grid-area: counter;
+  flex: 0 0 auto;
   margin: 0;
+  padding-top: 0;
   text-align: center;
   color: rgba(255, 255, 255, 0.72);
-  font-size: 0.86rem;
+  font-size: 0.96rem;
   letter-spacing: 0.12em;
+  line-height: 1;
 }
 
 .project-lightbox__nav[hidden],

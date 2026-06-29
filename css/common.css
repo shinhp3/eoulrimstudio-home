@@ -246,10 +246,6 @@ html.custom-cursor * {
   font-size: 0.8rem;
 }
 
-.header-contact span {
-  margin-left: 0.4rem;
-}
-
 .menu-button,
 .mobile-menu {
   display: none;
@@ -505,15 +501,11 @@ html.custom-cursor * {
   font-size: 0.8rem;
 }
 
-.desktop-nav a,
+.desktop-nav a:not(.nav-link--contact-bar),
 .header-contact {
   display: flex;
   align-items: center;
   min-height: 44px;
-}
-
-.header-contact {
-  font-size: 0.84rem;
 }
 
 .eyebrow {
@@ -640,6 +632,7 @@ html.custom-cursor * {
   border: 1px solid var(--ink);
   border-radius: 999px;
   gap: 0.25rem;
+  font-size: 0.84rem;
   background: var(--ink);
   color: #fff;
   transition:

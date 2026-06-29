@@ -1,3 +1,11 @@
+const resolvePath = (path) => {
+  try {
+    return new URL(path, document.baseURI).href;
+  } catch {
+    return path;
+  }
+};
+
 const header = document.querySelector('[data-header]');
 const menuButton = document.querySelector('.menu-button');
 const mobileMenu = document.querySelector('.mobile-menu');
@@ -154,45 +162,6 @@ const projectData = {
     kicker: '양각 캐릭터의 형태를 선명하게 유지합니다.',
     description: '표면의 양각 캐릭터가 선명하게 구현되도록 몰드 구조와 분할 위치를 설계했습니다.'
   },
-  // '04': {
-  //   title: '표면 연구 04',
-  //   year: '2024',
-  //   type: '프로토타입',
-  //   service: '재료 테스트 · 표면 샘플 제작',
-  //   images: [
-  //     'assets/portfolio-04.svg',
-  //     'assets/portfolio-01.svg',
-  //     'assets/portfolio-03.svg',
-  //   ],
-  //   kicker: '단순한 형태일수록 더 자세하게 봅니다.',
-  //   description: '표면에 남는 부드러운 곡면과 굽 구조를 탐색한 프로토타입입니다. 재료 변화와 수축률을 반영해 안정적인 결과를 만들었습니다.',
-  // },
-  // '05': {
-  //   title: '졸업 작품',
-  //   year: '2024',
-  //   type: '다분할 몰드',
-  //   service: '복합 형태 분할 · 제작 일정 관리',
-  //   images: [
-  //     'assets/portfolio-05.svg',
-  //     'assets/portfolio-02.svg',
-  //     'assets/portfolio-04.svg',
-  //   ],
-  //   kicker: '아이디어를 작품으로 완성하는 과정입니다.',
-  //   description: '복잡한 조업 작품의 원형을 여러 파트로 분할하고 결합 정확도를 높인 프로젝트입니다. 제작 일정에 맞춰 테스트와 수정을 함께 진행했습니다.',
-  // },
-  // '06': {
-  //   title: '맞춤형 몰드 연구',
-  //   year: '2023',
-  //   type: '스튜디오 연구',
-  //   service: '구조 리서치 · 제작 방식 실험',
-  //   images: [
-  //     'assets/portfolio-06.svg',
-  //     'assets/portfolio-05.svg',
-  //     'assets/portfolio-02.svg',
-  //   ],
-  //   kicker: '좋은 작업 방식을 계속 연구합니다.',
-  //   description: '스튜디오에서 진행한 몰드 구조와 소재 관련 연구입니다. 다양한 원형과 분할 방식을 실험하며 실제 제작에 적용할 기준을 만들었습니다.',
-  // },
 };
 
 const getProjectImages = (project) =>
@@ -242,30 +211,143 @@ const initProjectLightbox = (project) => {
       : `${project.title} 이미지 ${index + 1}`,
   );
 
-  const imageEl = lightbox.querySelector('[data-lightbox-image]');
+  const viewport = lightbox.querySelector('[data-lightbox-viewport]');
+  const track = lightbox.querySelector('[data-lightbox-track]');
   const counterEl = lightbox.querySelector('[data-lightbox-counter]');
   const prevBtn = lightbox.querySelector('[data-lightbox-prev]');
   const nextBtn = lightbox.querySelector('[data-lightbox-next]');
-  const figureEl = lightbox.querySelector('[data-lightbox-figure]');
   const closeBtn = lightbox.querySelector('.project-lightbox__close');
+  const dialog = lightbox.querySelector('.project-lightbox__dialog');
+  const backdrop = lightbox.querySelector('.project-lightbox__backdrop');
   const showNav = images.length > 1;
+  const mobileLightbox = window.matchMedia('(max-width: 640px)');
+
+  if (track) {
+    track.innerHTML = images
+      .map(
+        (src, index) => `
+<div class="project-lightbox__slide">
+  <img src="${resolvePath(src)}" alt="${alts[index]}" loading="${index === 0 ? 'eager' : 'lazy'}" draggable="false">
+</div>`.trim(),
+      )
+      .join('');
+  }
+
   let currentIndex = 0;
   let lastFocused = null;
-  let touchStartX = 0;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragPx = 0;
+  let dragPy = 0;
+  let dragMode = 'pending';
+  let isDragging = false;
+  let activePointerId = null;
 
-  const updateView = () => {
-    if (!imageEl || !counterEl) return;
-    imageEl.src = images[currentIndex];
-    imageEl.alt = alts[currentIndex];
-    counterEl.textContent = `${currentIndex + 1} / ${images.length}`;
-    if (prevBtn) prevBtn.hidden = !showNav;
-    if (nextBtn) nextBtn.hidden = !showNav;
-    if (counterEl) counterEl.hidden = !showNav;
+  const slideWidth = () => viewport?.getBoundingClientRect().width || 0;
+
+  const clampIndex = (index) => Math.min(images.length - 1, Math.max(0, index));
+
+  const applyPosition = (offsetPx = 0) => {
+    if (!track) return;
+    let offset = offsetPx;
+    if (currentIndex === 0 && offset > 0) offset *= 0.3;
+    if (currentIndex === images.length - 1 && offset < 0) offset *= 0.3;
+    track.style.transform = `translate3d(${-(currentIndex * slideWidth()) + offset}px, 0, 0)`;
+  };
+
+  const updateChrome = () => {
+    if (counterEl) {
+      counterEl.textContent = `${currentIndex + 1} / ${images.length}`;
+      counterEl.hidden = !showNav;
+    }
+    const showButtons = showNav && !mobileLightbox.matches;
+    if (prevBtn) {
+      prevBtn.hidden = !showButtons;
+      prevBtn.disabled = currentIndex === 0;
+    }
+    if (nextBtn) {
+      nextBtn.hidden = !showButtons;
+      nextBtn.disabled = currentIndex === images.length - 1;
+    }
+  };
+
+  const goTo = (index, { animate = true } = {}) => {
+    if (!track || !viewport) return;
+    const nextIndex = clampIndex(index);
+    if (nextIndex === currentIndex && animate) {
+      applyPosition(0);
+      return;
+    }
+    currentIndex = nextIndex;
+    updateChrome();
+    track.classList.toggle('is-animating', animate && !reduceMotion);
+    applyPosition(0);
+    if (!animate || reduceMotion) {
+      track.classList.remove('is-animating');
+    }
+  };
+
+  const step = (delta) => {
+    goTo(currentIndex + delta, { animate: !reduceMotion });
+  };
+
+  const resetDismiss = () => {
+    dragPy = 0;
+    dragMode = 'pending';
+    lightbox.classList.remove('is-dismissing');
+    dialog?.classList.remove('is-snapping');
+    backdrop?.classList.remove('is-snapping');
+    if (dialog) {
+      dialog.style.transform = '';
+      dialog.style.opacity = '';
+    }
+    if (backdrop) backdrop.style.opacity = '';
+  };
+
+  const applyDismiss = (offsetPx = 0) => {
+    if (!dialog) return;
+    const progress = Math.min(1, offsetPx / 280);
+    dialog.style.transform = `translate3d(0, ${offsetPx}px, 0)`;
+    dialog.style.opacity = String(1 - progress * 0.35);
+    if (backdrop) backdrop.style.opacity = String(1 - progress * 0.55);
+  };
+
+  const snapBackDismiss = () => {
+    if (!dialog) return;
+    dialog.classList.add('is-snapping');
+    backdrop?.classList.add('is-snapping');
+    applyDismiss(0);
+    window.setTimeout(() => {
+      resetDismiss();
+    }, 320);
+  };
+
+  const dismissAndClose = () => {
+    if (!dialog) {
+      close();
+      return;
+    }
+    dialog.classList.add('is-snapping');
+    backdrop?.classList.add('is-snapping');
+    applyDismiss(window.innerHeight * 0.35);
+    window.setTimeout(() => {
+      close();
+    }, 240);
+  };
+
+  const close = () => {
+    lightbox.hidden = true;
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('lightbox-open');
+    resetDismiss();
+    if (typeof lastFocused?.focus === 'function') lastFocused.focus();
   };
 
   const open = (index) => {
+    resetDismiss();
     currentIndex = index;
-    updateView();
+    updateChrome();
+    goTo(index, { animate: false });
     lastFocused = document.activeElement;
     lightbox.hidden = false;
     lightbox.setAttribute('aria-hidden', 'false');
@@ -273,16 +355,92 @@ const initProjectLightbox = (project) => {
     closeBtn?.focus();
   };
 
-  const close = () => {
-    lightbox.hidden = true;
-    lightbox.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('lightbox-open');
-    if (typeof lastFocused?.focus === 'function') lastFocused.focus();
+  const onPointerDown = (event) => {
+    if (lightbox.hidden || !viewport) return;
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+    const isMobile = mobileLightbox.matches;
+    if (!isMobile && !showNav) return;
+
+    isDragging = true;
+    dragMode = 'pending';
+    activePointerId = event.pointerId;
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    dragPx = 0;
+    dragPy = 0;
+    viewport.classList.add('is-dragging');
+    track?.classList.remove('is-animating');
+    viewport.setPointerCapture(event.pointerId);
   };
 
-  const step = (delta) => {
-    currentIndex = (currentIndex + delta + images.length) % images.length;
-    updateView();
+  const onPointerMove = (event) => {
+    if (!isDragging || event.pointerId !== activePointerId) return;
+
+    const dx = event.clientX - dragStartX;
+    const dy = event.clientY - dragStartY;
+
+    if (dragMode === 'pending') {
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+      if (absX < 8 && absY < 8) return;
+
+      if (mobileLightbox.matches && absY > absX && dy > 0) {
+        dragMode = 'vertical';
+        lightbox.classList.add('is-dismissing');
+      } else if (showNav && absX >= absY) {
+        dragMode = 'horizontal';
+      } else {
+        isDragging = false;
+        activePointerId = null;
+        viewport?.classList.remove('is-dragging');
+        viewport?.releasePointerCapture(event.pointerId);
+        return;
+      }
+    }
+
+    if (dragMode === 'horizontal') {
+      dragPx = dx;
+      applyPosition(dragPx);
+      return;
+    }
+
+    if (dragMode === 'vertical') {
+      dragPy = Math.max(0, dy);
+      applyDismiss(dragPy);
+    }
+  };
+
+  const finishDrag = (event) => {
+    if (!isDragging || event.pointerId !== activePointerId) return;
+
+    const mode = dragMode;
+    isDragging = false;
+    activePointerId = null;
+    dragMode = 'pending';
+    viewport?.classList.remove('is-dragging');
+    viewport?.releasePointerCapture(event.pointerId);
+
+    if (mode === 'vertical') {
+      const threshold = Math.min(120, window.innerHeight * 0.14);
+      if (dragPy > threshold) dismissAndClose();
+      else snapBackDismiss();
+      dragPx = 0;
+      dragPy = 0;
+      return;
+    }
+
+    if (mode === 'horizontal') {
+      const width = slideWidth();
+      const threshold = width * 0.16;
+
+      if (dragPx < -threshold && currentIndex < images.length - 1) step(1);
+      else if (dragPx > threshold && currentIndex > 0) step(-1);
+      else goTo(currentIndex, { animate: !reduceMotion });
+    }
+
+    dragPx = 0;
+    dragPy = 0;
   };
 
   gallery.addEventListener('click', (event) => {
@@ -303,33 +461,29 @@ const initProjectLightbox = (project) => {
     element.addEventListener('click', close);
   });
 
+  backdrop?.addEventListener('click', () => {
+    if (mobileLightbox.matches) close();
+  });
+
   window.addEventListener('keydown', (event) => {
     if (lightbox.hidden) return;
     if (event.key === 'Escape') close();
-    if (event.key === 'ArrowLeft' && showNav) step(-1);
-    if (event.key === 'ArrowRight' && showNav) step(1);
+    if (event.key === 'ArrowLeft' && showNav && currentIndex > 0) step(-1);
+    if (event.key === 'ArrowRight' && showNav && currentIndex < images.length - 1) step(1);
   });
 
-  figureEl?.addEventListener(
-    'touchstart',
-    (event) => {
-      touchStartX = event.changedTouches[0].screenX;
-    },
-    { passive: true },
-  );
+  viewport?.addEventListener('pointerdown', onPointerDown);
+  viewport?.addEventListener('pointermove', onPointerMove);
+  viewport?.addEventListener('pointerup', finishDrag);
+  viewport?.addEventListener('pointercancel', finishDrag);
 
-  figureEl?.addEventListener(
-    'touchend',
-    (event) => {
-      if (!showNav || lightbox.hidden) return;
-      const deltaX = event.changedTouches[0].screenX - touchStartX;
-      if (Math.abs(deltaX) < 48) return;
-      step(deltaX > 0 ? -1 : 1);
-    },
-    { passive: true },
-  );
+  window.addEventListener('resize', () => {
+    if (lightbox.hidden) return;
+    goTo(currentIndex, { animate: false });
+  });
 
-  updateView();
+  updateChrome();
+  goTo(0, { animate: false });
 };
 
 const renderPortfolioCatalog = () => {
@@ -343,7 +497,7 @@ const renderPortfolioCatalog = () => {
 
       const loading = index < 3 ? 'eager' : 'lazy';
       return `
-<a class="portfolio-card reveal" href="project.html?id=${id}" data-cursor="상세 보기">
+<a class="portfolio-card reveal" href="${typeof window.pageUrl === "function" ? window.pageUrl(`project/?id=${id}`) : `project/?id=${id}`}" data-cursor="상세 보기">
   <figure><img src="${thumb}" alt="${project.title}" loading="${loading}"><span>${id}</span></figure>
   <div><h2>${project.title}</h2><p>${project.type} · ${project.year}</p></div>
 </a>`.trim();
@@ -380,7 +534,10 @@ const initProjectDetailPage = () => {
 
   const nextProject = document.querySelector('[data-next-project]');
   if (nextProject) {
-    nextProject.href = `project.html?id=${nextId}`;
+    nextProject.href =
+      typeof window.pageUrl === "function"
+        ? window.pageUrl(`project/?id=${nextId}`)
+        : `project/?id=${nextId}`;
     nextProject.setAttribute('aria-label', `다음 프로젝트: ${projectData[nextId].title}`);
   }
   document.title = `${project.title} | 어울림`;

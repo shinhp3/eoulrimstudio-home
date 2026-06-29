@@ -83,6 +83,8 @@
 
   .hero-bg {
     object-position: center 35%;
+    animation: none;
+    transform: translate3d(var(--mx), var(--my), 0) scale(1);
   }
 
   .section-head {
@@ -189,5 +191,11 @@
   .hero-bg {
     animation: none;
     transform: none;
+    opacity: 0;
+  }
+
+  .hero-media.is-video-fallback::before,
+  .hero-media::before {
+    opacity: 1;
   }
 }

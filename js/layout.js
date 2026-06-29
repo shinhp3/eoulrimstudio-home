@@ -19,9 +19,9 @@ const FOOTER_SOCIAL_ICONS = {
 };
 
 const NAV_ITEMS = [
-  { id: "work", href: "index.html", label: "작업" },
-  { id: "about", href: "about.html", label: "소개", aboutHref: "#top" },
-  { id: "process", href: "about.html#process", label: "제작 과정" },
+  { id: "work", href: "portfolio/", label: "작업" },
+  { id: "about", href: "about/", label: "소개", aboutHref: "#top" },
+  { id: "process", href: "about/#process", label: "제작 과정" },
   {
     id: "contact",
     href: CONTACT_URL,
@@ -32,7 +32,8 @@ const NAV_ITEMS = [
 
 function navHref(item, onAboutPage) {
   if (onAboutPage && item.aboutHref) return item.aboutHref;
-  return item.href;
+  const href = item.href;
+  return typeof window.pageUrl === "function" ? window.pageUrl(href) : href;
 }
 
 function renderSiteHeader({
@@ -70,12 +71,12 @@ function renderSiteHeader({
 
   return `
 <header class="${headerClass}" data-header>
-  <a class="brand" href="index.html" aria-label="어울림 홈">
+  <a class="brand" href="${typeof window.pageUrl === "function" ? window.pageUrl("index.html") : "./"}" aria-label="어울림 홈">
     <img class="brand-logo brand-logo-black" src="assets/object/logo-black.png" alt="" width="325" height="68">
     <img class="brand-logo brand-logo-white" src="assets/object/logo-white.png" alt="" width="325" height="68">
   </a>
   <nav class="desktop-nav" aria-label="주요 메뉴">${desktopLinks}${mobileBarContact}</nav>
-  <a class="header-contact" href="${contactHref}" target="_blank" rel="noopener noreferrer">문의하기 <span aria-hidden="true">↗</span></a>
+  <a class="header-contact" href="${contactHref}" target="_blank" rel="noopener noreferrer">문의하기</a>
   <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu">
     <span class="sr-only">메뉴 열기</span><i></i><i></i>
   </button>
@@ -95,7 +96,7 @@ function renderInnerFooter({
 
   return `
 <footer class="inner-footer${footerLink ? "" : " inner-footer--compact"}">
-  <a class="brand" href="index.html" aria-label="어울림 홈">
+  <a class="brand" href="${typeof window.pageUrl === "function" ? window.pageUrl("index.html") : "./"}" aria-label="어울림 홈">
     <img class="brand-logo brand-logo-black" src="assets/object/logo-black.png" alt="" width="325" height="68">
     <img class="brand-logo brand-logo-white" src="assets/object/logo-white.png" alt="" width="325" height="68">
   </a>
@@ -114,7 +115,7 @@ function renderSocialFooter({ theme = "dark" } = {}) {
 
   return `
 <footer class="site-footer site-footer--${theme}">
-  <a class="${brandClass}" href="index.html" aria-label="어울림 홈">
+  <a class="${brandClass}" href="${typeof window.pageUrl === "function" ? window.pageUrl("index.html") : "./"}" aria-label="어울림 홈">
     <img class="brand-logo brand-logo-black" src="assets/object/logo-black.png" alt="" width="325" height="68">
     <img class="brand-logo brand-logo-white" src="assets/object/logo-white.png" alt="" width="325" height="68">
   </a>
