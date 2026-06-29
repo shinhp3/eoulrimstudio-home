@@ -246,7 +246,6 @@ const initProjectLightbox = (project) => {
   const counterEl = lightbox.querySelector('[data-lightbox-counter]');
   const prevBtn = lightbox.querySelector('[data-lightbox-prev]');
   const nextBtn = lightbox.querySelector('[data-lightbox-next]');
-  const controlsEl = lightbox.querySelector('[data-lightbox-controls]');
   const figureEl = lightbox.querySelector('[data-lightbox-figure]');
   const closeBtn = lightbox.querySelector('.project-lightbox__close');
   const showNav = images.length > 1;
@@ -259,7 +258,9 @@ const initProjectLightbox = (project) => {
     imageEl.src = images[currentIndex];
     imageEl.alt = alts[currentIndex];
     counterEl.textContent = `${currentIndex + 1} / ${images.length}`;
-    if (controlsEl) controlsEl.hidden = !showNav;
+    if (prevBtn) prevBtn.hidden = !showNav;
+    if (nextBtn) nextBtn.hidden = !showNav;
+    if (counterEl) counterEl.hidden = !showNav;
   };
 
   const open = (index) => {

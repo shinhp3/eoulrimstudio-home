@@ -11,8 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/common.css?v=9">
   <link rel="stylesheet" href="css/responsive/common.css?v=9">
-  <link rel="stylesheet" href="css/project.css?v=10">
-  <link rel="stylesheet" href="css/responsive/project.css?v=10">
+  <link rel="stylesheet" href="css/project.css?v=11">
+  <link rel="stylesheet" href="css/responsive/project.css?v=11">
   <script src="js/layout.js" defer></script>
   <script src="script.js" defer></script>
 </head>
@@ -58,21 +58,21 @@
   <div class="project-lightbox" data-project-lightbox hidden aria-hidden="true">
     <button type="button" class="project-lightbox__backdrop" data-lightbox-close aria-label="닫기"></button>
     <div class="project-lightbox__dialog" role="dialog" aria-modal="true" aria-label="이미지 확대 보기">
-      <button type="button" class="project-lightbox__close" data-lightbox-close aria-label="닫기">
-        <span aria-hidden="true">×</span>
+      <div class="project-lightbox__toolbar">
+        <button type="button" class="project-lightbox__close" data-lightbox-close aria-label="닫기">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <button type="button" class="project-lightbox__nav project-lightbox__nav--prev" data-lightbox-prev aria-label="이전 이미지" hidden>
+        <span aria-hidden="true">←</span>
       </button>
       <figure class="project-lightbox__figure" data-lightbox-figure>
         <img class="project-lightbox__image" data-lightbox-image src="" alt="">
       </figure>
-      <div class="project-lightbox__controls" data-lightbox-controls>
-        <button type="button" class="project-lightbox__nav project-lightbox__nav--prev" data-lightbox-prev aria-label="이전 이미지">
-          <span aria-hidden="true">←</span>
-        </button>
-        <p class="project-lightbox__counter" data-lightbox-counter aria-live="polite"></p>
-        <button type="button" class="project-lightbox__nav project-lightbox__nav--next" data-lightbox-next aria-label="다음 이미지">
-          <span aria-hidden="true">→</span>
-        </button>
-      </div>
+      <button type="button" class="project-lightbox__nav project-lightbox__nav--next" data-lightbox-next aria-label="다음 이미지" hidden>
+        <span aria-hidden="true">→</span>
+      </button>
+      <p class="project-lightbox__counter" data-lightbox-counter aria-live="polite" hidden></p>
     </div>
   </div>
 </body>
