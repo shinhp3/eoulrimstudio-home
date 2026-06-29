@@ -130,6 +130,20 @@ function renderContactFooter() {
   return renderSocialFooter({ theme: "dark" });
 }
 
+function mountCustomCursor() {
+  if (!window.matchMedia("(pointer: fine)").matches) return;
+  if (document.querySelector(".cursor")) return;
+
+  const progress = document.querySelector(".page-progress");
+  const markup = '<div class="cursor" aria-hidden="true"><span>보기</span></div>';
+
+  if (progress) {
+    progress.insertAdjacentHTML("afterend", markup);
+  } else {
+    document.body.insertAdjacentHTML("afterbegin", markup);
+  }
+}
+
 function mountLayout() {
   const headerSlot = document.querySelector("[data-site-header]");
   const footerSlot = document.querySelector("[data-site-footer]");
@@ -156,4 +170,5 @@ function mountLayout() {
   }
 }
 
+mountCustomCursor();
 mountLayout();

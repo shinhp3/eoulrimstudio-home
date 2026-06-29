@@ -17,8 +17,19 @@
 .detail-gallery {
   margin-top: clamp(1.25rem, 2.5vw, 2rem);
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.85rem;
+}
+
+.detail-gallery.is-count-1 {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.detail-gallery.is-count-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.detail-gallery.is-count-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .detail-gallery figure,
@@ -29,18 +40,149 @@
   aspect-ratio: 1 / 1;
 }
 
-.detail-images {
-  display: contents;
+.detail-gallery__trigger {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
 }
 
-.detail-gallery img {
+.detail-gallery__trigger img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   transition:
     transform calc(var(--duration-slow) + 0.1s) var(--ease-smooth),
     filter var(--duration-base) var(--ease-gentle);
 }
 
-.detail-gallery figure:hover img {
+.detail-gallery figure:hover .detail-gallery__trigger img {
   transform: scale(1.02);
+}
+
+body.lightbox-open {
+  overflow: hidden;
+}
+
+.project-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 2.5rem);
+}
+
+.project-lightbox[hidden] {
+  display: none;
+}
+
+.project-lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(8, 8, 8, 0.92);
+  cursor: pointer;
+}
+
+.project-lightbox__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(920px, 100%);
+  height: min(88vh, 900px);
+  max-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.project-lightbox__figure {
+  flex: 1;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  touch-action: pan-y pinch-zoom;
+}
+
+.project-lightbox__image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.project-lightbox__controls {
+  display: grid;
+  grid-template-columns: minmax(44px, auto) 1fr minmax(44px, auto);
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.project-lightbox__controls[hidden] {
+  display: none;
+}
+
+.project-lightbox__close,
+.project-lightbox__nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-gentle),
+    background var(--duration-fast) var(--ease-gentle);
+}
+
+.project-lightbox__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  font-size: 1.6rem;
+}
+
+.project-lightbox__nav--prev,
+.project-lightbox__nav--next {
+  justify-self: center;
+}
+
+.project-lightbox__close:hover,
+.project-lightbox__close:focus-visible,
+.project-lightbox__nav:hover,
+.project-lightbox__nav:focus-visible {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.project-lightbox__counter {
+  margin: 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+.project-lightbox__nav[hidden] {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .detail-heading {
@@ -48,7 +190,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(360px, 0.78fr);
   gap: 1rem clamp(2rem, 5vw, 5rem);
   align-items: start;
-  padding: clamp(2rem, 4vw, 3.6rem) 0 clamp(1.25rem, 3vw, 2.35rem);
+  padding: clamp(2rem, 4vw, 3.6rem) 0 clamp(1.5rem, 3vw, 2rem);
   border-bottom: 1px solid var(--ink);
 }
 
@@ -96,15 +238,25 @@
 .detail-story {
   display: grid;
   grid-template-columns: minmax(120px, 0.25fr) minmax(0, 0.75fr);
+  align-items: start;
   gap: clamp(1.25rem, 4vw, 4rem);
-  padding: clamp(1.8rem, 4vw, 4rem) 0 0;
+  padding-block: clamp(2rem, 4vw, 3.5rem);
 }
 
 .detail-story .eyebrow {
+  grid-column: 1;
+  grid-row: 1;
   margin-bottom: 0;
 }
 
+.detail-story .sr-only {
+  grid-column: 2;
+  grid-row: 1;
+}
+
 .detail-story > p:last-child {
+  grid-column: 2;
+  grid-row: 1;
   margin: 0;
   max-width: 640px;
   color: var(--muted);
@@ -117,7 +269,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(1.5rem, 4vw, 3rem);
   align-items: end;
-  padding: clamp(4rem, 8vw, 7rem) 0 clamp(5rem, 9vw, 8rem);
+  padding: clamp(2rem, 4vw, 3.5rem) 0 clamp(5rem, 9vw, 8rem);
   border-top: 1px solid var(--ink);
 }
 

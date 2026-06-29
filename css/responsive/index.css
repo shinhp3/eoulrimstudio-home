@@ -6,11 +6,24 @@
     min-height: 235px;
   }
 
-  .portfolio-heading > p:last-child {
-    justify-self: start;
+  .portfolio-heading-meta {
+    grid-column: 1;
+    justify-self: stretch;
+  }
+
+  .portfolio-heading-meta p {
+    max-width: none;
+  }
+
+  .catalog-view-toggle {
+    display: inline-flex;
   }
 
   .portfolio-catalog {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-catalog.is-dual-column {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -26,13 +39,37 @@
     line-height: 0.9;
   }
 
-  .portfolio-heading > p:last-child {
+  .portfolio-heading-meta p {
     max-width: 22rem;
   }
 
   .portfolio-catalog {
+    gap: 2.4rem;
+  }
+
+  .portfolio-catalog.is-dual-column {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2.4rem 0.85rem;
+  }
+
+  .portfolio-catalog.is-dual-column .portfolio-card h2 {
+    font-size: clamp(0.68rem, 3.1vw, 0.78rem);
+    line-height: 1.35;
+    letter-spacing: 0.04em;
+  }
+
+  .portfolio-catalog.is-dual-column .portfolio-card p {
+    margin-top: 0.25rem;
+    font-size: clamp(0.62rem, 2.8vw, 0.72rem);
+    white-space: normal;
+  }
+
+  .portfolio-catalog.is-dual-column .portfolio-card figure span {
+    top: 0.65rem;
+    left: 0.65rem;
+    width: 32px;
+    height: 32px;
+    font-size: 0.58rem;
   }
 
   .portfolio-card > div {
@@ -42,23 +79,23 @@
   }
 
   .portfolio-card h2 {
-    font-size: clamp(0.68rem, 3.1vw, 0.78rem);
-    line-height: 1.35;
-    letter-spacing: 0.04em;
+    font-size: clamp(0.95rem, 4.2vw, 1.15rem);
+    line-height: 1.3;
+    letter-spacing: 0.02em;
   }
 
   .portfolio-card p {
-    margin-top: 0.25rem;
-    font-size: clamp(0.62rem, 2.8vw, 0.72rem);
+    margin-top: 0.35rem;
+    font-size: clamp(0.78rem, 3.4vw, 0.88rem);
     white-space: normal;
   }
 
   .portfolio-card figure span {
-    top: 0.65rem;
-    left: 0.65rem;
-    width: 32px;
-    height: 32px;
-    font-size: 0.58rem;
+    top: 0.85rem;
+    left: 0.85rem;
+    width: 36px;
+    height: 36px;
+    font-size: 0.62rem;
   }
 
   .catalog-cta {
@@ -95,7 +132,7 @@
 
 @media (hover: none) {
   .portfolio-card:hover img {
-    filter: grayscale(1);
+    filter: none;
     transform: none;
   }
 

@@ -124,9 +124,13 @@ button {
   transition:
     width var(--duration-fast) var(--ease-smooth),
     height var(--duration-fast) var(--ease-smooth),
-    opacity 0.35s var(--ease-gentle),
+    opacity 0.2s var(--ease-gentle),
     background var(--duration-fast) var(--ease-gentle);
-  will-change: left, top;
+}
+
+html.custom-cursor,
+html.custom-cursor * {
+  cursor: none !important;
 }
 
 .cursor span {
@@ -342,19 +346,20 @@ button {
    ========================================================================== */
 
 .reveal {
-  --reveal-opacity: 0;
-  --reveal-y: 28px;
-  opacity: var(--reveal-opacity);
-  transform: translate3d(0, var(--reveal-y), 0);
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
   transition:
     opacity var(--duration-slow) var(--ease-smooth),
     transform calc(var(--duration-slow) + 0.15s) var(--ease-smooth);
-  will-change: opacity, transform;
 }
 
 .reveal.is-revealed {
-  --reveal-opacity: 1;
-  --reveal-y: 0px;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.about-page .reveal {
+  transition: none;
 }
 
 .reveal.visible {
@@ -522,7 +527,7 @@ button {
   min-height: 44px;
 }
 
-/* 모노크롬 테마 — 흑백 이미지, 배경색 */
+/* 헤더 배경 */
 
 .site-header.scrolled {
   background: rgba(255, 255, 255, 0.94);
@@ -532,16 +537,12 @@ button {
   background: rgba(255, 255, 255, 0.96) !important;
 }
 
-body img {
-  filter: grayscale(1);
-}
-
 @keyframes heroIn {
   from {
-    filter: grayscale(1) brightness(0.72);
+    filter: brightness(0.82);
   }
   to {
-    filter: grayscale(1) brightness(1);
+    filter: none;
   }
 }
 

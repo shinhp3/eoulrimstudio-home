@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/common.css?v=4">
-  <link rel="stylesheet" href="css/responsive/common.css?v=4">
-  <link rel="stylesheet" href="css/project.css?v=4">
-  <link rel="stylesheet" href="css/responsive/project.css?v=4">
+  <link rel="stylesheet" href="css/common.css?v=9">
+  <link rel="stylesheet" href="css/responsive/common.css?v=9">
+  <link rel="stylesheet" href="css/project.css?v=10">
+  <link rel="stylesheet" href="css/responsive/project.css?v=10">
   <script src="js/layout.js" defer></script>
   <script src="script.js" defer></script>
 </head>
@@ -23,17 +23,11 @@
   <div data-site-header data-nav="work" data-header-variant="inner"></div>
 
   <main id="main" class="project-detail" data-project-detail>
-    <section class="detail-gallery reveal" aria-label="프로젝트 이미지">
-      <figure class="detail-hero"><img data-project-image src="assets/portfolio-01.svg" alt="프로젝트 대표 이미지"></figure>
-      <div class="detail-images">
-        <figure><img data-project-image-secondary src="assets/portfolio-03.svg" alt="프로젝트 세부 이미지"></figure>
-        <figure><img data-project-image-tertiary src="assets/portfolio-04.svg" alt="프로젝트 제작 과정 이미지"></figure>
-      </div>
-    </section>
+    <section class="detail-gallery reveal" data-project-gallery aria-label="프로젝트 이미지"></section>
 
     <header class="detail-heading reveal">
       <p class="eyebrow"><span data-project-number>01</span> · 주요 작업</p>
-      <h1 data-project-title>관사 오브젝트</h1>
+      <h1 data-project-title>괄사 오브젝트</h1>
       <div class="detail-facts">
         <p><small>연도</small><span data-project-year>2026</span></p>
         <p><small>유형</small><span data-project-type>2분할 몰드</span></p>
@@ -60,5 +54,26 @@
   </main>
 
   <div data-site-footer></div>
+
+  <div class="project-lightbox" data-project-lightbox hidden aria-hidden="true">
+    <button type="button" class="project-lightbox__backdrop" data-lightbox-close aria-label="닫기"></button>
+    <div class="project-lightbox__dialog" role="dialog" aria-modal="true" aria-label="이미지 확대 보기">
+      <button type="button" class="project-lightbox__close" data-lightbox-close aria-label="닫기">
+        <span aria-hidden="true">×</span>
+      </button>
+      <figure class="project-lightbox__figure" data-lightbox-figure>
+        <img class="project-lightbox__image" data-lightbox-image src="" alt="">
+      </figure>
+      <div class="project-lightbox__controls" data-lightbox-controls>
+        <button type="button" class="project-lightbox__nav project-lightbox__nav--prev" data-lightbox-prev aria-label="이전 이미지">
+          <span aria-hidden="true">←</span>
+        </button>
+        <p class="project-lightbox__counter" data-lightbox-counter aria-live="polite"></p>
+        <button type="button" class="project-lightbox__nav project-lightbox__nav--next" data-lightbox-next aria-label="다음 이미지">
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

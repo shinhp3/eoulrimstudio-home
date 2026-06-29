@@ -5,6 +5,10 @@
     gap: 0.75rem;
   }
 
+  .detail-gallery.is-count-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .detail-heading {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -13,12 +17,29 @@
   .detail-facts {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .project-lightbox {
+    padding: 0.75rem;
+  }
+
+  .project-lightbox__dialog {
+    height: min(92vh, 900px);
+  }
 }
 
 @media (max-width: 640px) {
-  .detail-gallery {
+  .detail-gallery.is-count-1 {
     grid-template-columns: 1fr;
-    gap: 0.7rem;
+  }
+
+  .detail-gallery.is-count-2,
+  .detail-gallery.is-count-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  .detail-gallery__trigger {
+    cursor: pointer;
   }
 
   .detail-heading {
@@ -46,11 +67,19 @@
   .detail-story {
     grid-template-columns: 1fr;
     gap: 0.9rem;
+    padding-block: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  .detail-story .eyebrow,
+  .detail-story > p:last-child {
+    grid-column: 1;
+    grid-row: auto;
   }
 
   .detail-nav {
     grid-template-columns: 1fr;
     gap: 2.5rem;
+    padding-top: clamp(1.75rem, 5vw, 2.5rem);
     padding-bottom: clamp(4rem, 12vw, 6rem);
   }
 
@@ -61,5 +90,55 @@
 
   .detail-nav > .detail-nav-link:not(.detail-nav-link--back) {
     justify-self: start;
+  }
+
+  .project-lightbox {
+    padding: 0;
+    place-items: stretch;
+  }
+
+  .project-lightbox__dialog {
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    gap: 0;
+    padding:
+      max(0.75rem, env(safe-area-inset-top))
+      max(0.75rem, env(safe-area-inset-right))
+      max(0.85rem, env(safe-area-inset-bottom))
+      max(0.75rem, env(safe-area-inset-left));
+  }
+
+  .project-lightbox__close {
+    top: max(0.35rem, env(safe-area-inset-top));
+    right: max(0.35rem, env(safe-area-inset-right));
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    min-height: 42px;
+    font-size: 1.45rem;
+    background: rgba(8, 8, 8, 0.45);
+    backdrop-filter: blur(8px);
+  }
+
+  .project-lightbox__figure {
+    padding: 2.75rem 0 0.5rem;
+  }
+
+  .project-lightbox__controls {
+    gap: 0.5rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .project-lightbox__nav {
+    width: 100%;
+    max-width: 4.5rem;
+    min-height: 48px;
+    font-size: 1.2rem;
+  }
+
+  .project-lightbox__counter {
+    font-size: 0.68rem;
   }
 }

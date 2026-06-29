@@ -9,54 +9,38 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/common.css?v=6">
-  <link rel="stylesheet" href="css/responsive/common.css?v=6">
-  <link rel="stylesheet" href="css/index.css?v=6">
-  <link rel="stylesheet" href="css/responsive/index.css?v=6">
+  <link rel="stylesheet" href="css/common.css?v=9">
+  <link rel="stylesheet" href="css/responsive/common.css?v=9">
+  <link rel="stylesheet" href="css/index.css?v=15">
+  <link rel="stylesheet" href="css/responsive/index.css?v=12">
   <script src="js/layout.js" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body id="top" class="inner-page">
   <a class="skip-link" href="#main">본문 바로가기</a>
   <div class="page-progress" aria-hidden="true"><i></i></div>
-  <div class="cursor" aria-hidden="true"><span>보기</span></div>
 
   <div data-site-header data-nav="work" data-header-variant="inner"></div>
 
   <main id="main" class="portfolio-page">
     <header class="portfolio-heading">
-      
       <h1><span> Ceramic Mold,</span><span>Projects.</span></h1>
-      <p>어울림의 석고몰드 작업입니다.</p>
+      <div class="portfolio-heading-meta">
+        <p>어울림의 석고몰드 작업입니다.</p>
+        <button
+          type="button"
+          class="catalog-view-toggle"
+          data-catalog-view-toggle
+          aria-pressed="false"
+          aria-label="2열 보기"
+        >
+          <img class="catalog-view-toggle__icon catalog-view-toggle__icon--dual" src="assets/object/two_button.svg" alt="" width="20" height="20">
+          <img class="catalog-view-toggle__icon catalog-view-toggle__icon--single" src="assets/object/one_button.svg" alt="" width="20" height="20">
+        </button>
+      </div>
     </header>
 
-    <section class="portfolio-catalog" aria-label="포트폴리오 목록">
-      <a class="portfolio-card reveal" href="project.html?id=01" data-cursor="상세 보기">
-        <figure><img src="assets/portfolio-01.svg" alt="괄사 오브젝트 몰드" loading="eager"><span>01</span></figure>
-        <div><h2>괄사 오브젝트</h2><p>2분할 몰드 · 2026</p></div>
-      </a>
-      <a class="portfolio-card reveal" href="project.html?id=02" data-cursor="상세 보기">
-        <figure><img src="assets/portfolio-02.svg" alt="조형 베슬 몰드" loading="eager"><span>02</span></figure>
-        <div><h2>조형 화기</h2><p>마스터 몰드 · 2025</p></div>
-      </a>
-      <a class="portfolio-card reveal" href="project.html?id=03" data-cursor="상세 보기">
-        <figure><img src="assets/portfolio-03.svg" alt="데일리 컵 몰드" loading="eager"><span>03</span></figure>
-        <div><h2>데일리 컵 시리즈</h2><p>생산용 몰드 · 2025</p></div>
-      </a>
-      <a class="portfolio-card reveal" href="project.html?id=04" data-cursor="상세 보기">
-        <figure><img src="assets/portfolio-04.svg" alt="사발 연구 몰드" loading="lazy"><span>04</span></figure>
-        <div><h2>사발 연구 04</h2><p>시제품 · 2024</p></div>
-      </a>
-      <a class="portfolio-card reveal" href="project.html?id=05" data-cursor="상세 보기">
-        <figure><img src="assets/portfolio-05.svg" alt="졸업작품 복합 몰드" loading="lazy"><span>05</span></figure>
-        <div><h2>졸업 작품</h2><p>다분할 몰드 · 2024</p></div>
-      </a>
-      <a class="portfolio-card reveal" href="project.html?id=06" data-cursor="상세 보기">
-        <figure><img src="assets/portfolio-06.svg" alt="스튜디오 커스텀 몰드" loading="lazy"><span>06</span></figure>
-        <div><h2>맞춤형 몰드 연구</h2><p>스튜디오 연구 · 2023</p></div>
-      </a>
-    </section>
-
+    <section class="portfolio-catalog" data-portfolio-catalog aria-label="포트폴리오 목록"></section>
     <section class="catalog-cta reveal">
       <p>제작이 필요한 형태를 보내주시면 적합한 몰드 방식을 제안합니다.</p>
       <a href="https://claymaker.eoulrimstudio.com/" target="_blank" rel="noopener noreferrer">제작 문의하기 <span>↗</span></a>
