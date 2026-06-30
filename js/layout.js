@@ -31,7 +31,10 @@ const NAV_ITEMS = [
 ];
 
 function navHref(item, onAboutPage) {
-  if (onAboutPage && item.aboutHref) return item.aboutHref;
+  if (onAboutPage && item.aboutHref) {
+    const href = `about/${item.aboutHref}`;
+    return typeof window.pageUrl === "function" ? window.pageUrl(href) : href;
+  }
   const href = item.href;
   return typeof window.pageUrl === "function" ? window.pageUrl(href) : href;
 }

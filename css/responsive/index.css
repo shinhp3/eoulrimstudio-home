@@ -66,6 +66,11 @@
   .portfolio-heading h1 {
     font-size: clamp(2.9rem, 13vw, 4rem);
     line-height: 0.9;
+    overflow-wrap: anywhere;
+  }
+
+  .portfolio-heading h1 span {
+    white-space: normal;
   }
 
   .portfolio-heading-meta p {
@@ -135,11 +140,6 @@
   .catalog-cta a {
     min-height: 64px;
     justify-self: start;
-  }
-
-  .scroll-top {
-    right: max(1.25rem, var(--pad));
-    bottom: 1.25rem;
   }
 }
 

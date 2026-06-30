@@ -59,11 +59,22 @@
     display: none;
   }
 
+  .site-header {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .desktop-nav {
+    overflow: hidden;
+    max-width: 100%;
+  }
+
   .menu-button {
     display: none;
     width: 44px;
     height: 44px;
-    margin-right: -10px;
+    margin-right: 0;
     padding: 0;
     border: 0;
     background: none;
@@ -225,6 +236,11 @@
     --pad: 1.25rem;
   }
 
+  .scroll-top {
+    right: max(1.25rem, var(--pad));
+    bottom: 1.25rem;
+  }
+
   .inner-footer > a:last-child {
     font-size: 0.55rem;
   }
@@ -239,6 +255,17 @@
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .scroll-top {
+    transform: none;
+    transition:
+      opacity var(--duration-fast) var(--ease-gentle),
+      visibility var(--duration-fast) var(--ease-gentle);
+  }
+
+  .scroll-top.is-visible {
+    transform: none;
   }
 
   .hero-media {

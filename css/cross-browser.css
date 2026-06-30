@@ -3,6 +3,7 @@
 :root {
   --vh-full: 100vh;
   --vh-88: 88vh;
+  --viewport-width: 100vw;
 }
 
 @supports (height: 100svh) {
@@ -12,16 +13,52 @@
   }
 }
 
+@supports (width: 100dvw) {
+  :root {
+    --viewport-width: 100dvw;
+  }
+}
+
 html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
 body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+  -webkit-overflow-scrolling: touch;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+}
+
+body > :is(main, #main, .portfolio-page, .inner-page) {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.site-header,
+.site-footer,
+.inner-footer {
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  html,
+  body {
+    touch-action: pan-y pinch-zoom;
+  }
 }
 
 button,

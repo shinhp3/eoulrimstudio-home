@@ -54,6 +54,15 @@ const updateHeader = (scrollY = window.scrollY) => {
   updateScrollTop(scrollY);
 };
 
+const linkTargetHash = (href) => {
+  if (!href) return '';
+  try {
+    return new URL(href, document.baseURI).hash;
+  } catch {
+    return href.startsWith('#') ? href : '';
+  }
+};
+
 const updateSectionNavigation = () => {
   if (!processSection || !header) return;
 
@@ -61,9 +70,9 @@ const updateSectionNavigation = () => {
   const activeHref = processIsActive ? '#process' : '#top';
 
   sectionNavLinks.forEach((link) => {
-    const href = link.getAttribute('href');
-    if (href === '#top' || href === '#process') {
-      if (href === activeHref) link.setAttribute('aria-current', 'page');
+    const hash = linkTargetHash(link.getAttribute('href'));
+    if (hash === '#top' || hash === '#process') {
+      if (hash === activeHref) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     }
   });
@@ -71,6 +80,39 @@ const updateSectionNavigation = () => {
 
 updateHeader();
 updateSectionNavigation();
+
+if (document.body.classList.contains('about-page')) {
+  const normalizePath = (pathname) => {
+    const path = pathname.replace(/\\/g, '/').replace(/\/index\.html$/i, '').replace(/\/$/, '');
+    return path || '/';
+  };
+
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href]');
+    if (!link) return;
+
+    let url;
+    try {
+      url = new URL(link.href, document.baseURI);
+    } catch {
+      return;
+    }
+
+    if (!url.hash) return;
+
+    const currentPath = normalizePath(location.pathname);
+    const linkPath = normalizePath(url.pathname);
+    if (linkPath !== currentPath) return;
+
+    const target = document.querySelector(url.hash);
+    if (!target) return;
+
+    event.preventDefault();
+    target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+    history.pushState(null, '', `${url.pathname}${url.search}${url.hash}`);
+    updateSectionNavigation();
+  });
+}
 
 if (scrollTopBtn) {
   scrollTopBtn.addEventListener('click', (event) => {

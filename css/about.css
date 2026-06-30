@@ -285,8 +285,7 @@
 }
 
 .intro-note span,
-.principle-list span,
-.process-list span {
+.principle-list span {
   font-size: 0.74rem;
   color: var(--accent);
 }
@@ -462,21 +461,37 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: clamp(0.8rem, 1.4vw, 1.15rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .process-step {
+  --process-block-size: min(100%, clamp(16rem, 36vw, 26rem));
   min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: center;
+  padding-block: clamp(1.75rem, 3vw, 2.25rem);
   border-top: 1px solid var(--ink);
 }
 
 .process-step figure {
   margin: 0;
+  width: var(--process-block-size);
   aspect-ratio: 1 / 1;
   overflow: hidden;
   background: #e7e7e7;
+}
+
+.process-step:nth-child(odd) figure {
+  justify-self: start;
+}
+
+.process-step:nth-child(even) figure {
+  order: 2;
+  justify-self: end;
 }
 
 .process-step img {
@@ -487,28 +502,52 @@
 }
 
 .process-step:hover img {
-  transform: scale(1.035);
+  transform: scale(1.03);
 }
 
 .process-step > div {
-  min-height: 210px;
-  padding-top: 1rem;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  max-width: var(--process-block-size);
+}
+
+.process-step > div > span {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.process-step:nth-child(odd) > div {
+  justify-self: start;
+  text-align: left;
+  align-items: flex-start;
+}
+
+.process-step:nth-child(even) > div {
+  order: 1;
+  justify-self: end;
+  text-align: right;
+  align-items: flex-end;
 }
 
 .process-step h3 {
-  margin: auto 0 0;
-  font-size: 1.05rem;
+  margin: 1.35rem 0 0;
+  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
   font-weight: 500;
   line-height: 1.35;
+  letter-spacing: -0.025em;
 }
 
 .process-step p {
-  margin: 0.45rem 0 0;
+  margin: 0.55rem 0 0;
+  max-width: 18rem;
   color: var(--muted);
-  font-size: 0.76rem;
-  line-height: 1.7;
+  font-size: clamp(0.8rem, 1vw, 0.9rem);
+  line-height: 1.75;
 }
 
 .manifesto {

@@ -3,6 +3,14 @@
 @media (max-width: 768px) {
   .about-page {
     isolation: isolate;
+    overflow-x: clip;
+  }
+
+  .hero.scroll-video-section,
+  .scroll-video-sticky,
+  .hero-media {
+    max-width: 100%;
+    overflow-x: clip;
   }
 
   .hero.scroll-video-section,
@@ -129,15 +137,6 @@
   .expertise {
     gap: 4rem;
   }
-
-  .process-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2.4rem 1rem;
-  }
-
-  .process-step > div {
-    min-height: 180px;
-  }
 }
 
 @media (max-width: 640px) {
@@ -163,6 +162,12 @@
     object-position: center 35%;
     animation: none;
     transform: translate3d(var(--mx), var(--my), 0);
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .hero-bg {
+      transform: none;
+    }
   }
 
   .section-head {
@@ -211,22 +216,38 @@
     text-align: right;
   }
 
-  .process-list {
-    grid-template-columns: 1fr;
-    gap: 2.2rem;
-  }
-
   .process-step {
-    border-bottom: 0;
+    grid-template-columns: 1fr;
+    gap: 1.15rem;
+    align-items: start;
+    padding-block: 1.5rem;
   }
 
-  .process-step > div {
-    min-height: 0;
-    padding-top: 0.9rem;
+  .process-step figure,
+  .process-step:nth-child(even) figure {
+    order: 0;
+    width: min(100%, 17.5rem);
   }
 
-  .process-step h3 {
-    margin-top: 2.4rem;
+  .process-step:nth-child(odd) figure {
+    justify-self: start;
+  }
+
+  .process-step:nth-child(even) figure {
+    justify-self: end;
+  }
+
+  .process-step > div,
+  .process-step:nth-child(even) > div {
+    order: 1;
+    max-width: min(100%, 17.5rem);
+    justify-self: start;
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .process-step p {
+    max-width: none;
   }
 
   .manifesto h2 br {
