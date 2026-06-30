@@ -167,6 +167,11 @@ const projectData = {
 const getProjectImages = (project) =>
   Array.isArray(project?.images) ? project.images.filter(Boolean) : [];
 
+const getOptimizedImageSrc = (src) =>
+  typeof src === 'string' && /\.(png|jpe?g)$/i.test(src)
+    ? src.replace(/\.(png|jpe?g)$/i, '.webp')
+    : src;
+
 const getGalleryColumnCount = (count) => {
   if (count <= 1) return 1;
   if (count === 2) return 2;
@@ -186,7 +191,10 @@ const renderProjectGallery = (project) => {
         index === 0
           ? `${project.title} 대표 이미지`
           : `${project.title} 이미지 ${index + 1}`;
-      return `<figure${figureClass}><button type="button" class="detail-gallery__trigger" data-gallery-index="${index}" data-cursor="확대" aria-label="${alt} 확대 보기"><img src="${src}" alt=""></button></figure>`;
+      const optimizedSrc = getOptimizedImageSrc(src);
+      const loading = index === 0 ? 'eager' : 'lazy';
+      const fetchPriority = index === 0 ? 'high' : 'auto';
+      return `<figure${figureClass}><button type="button" class="detail-gallery__trigger" data-gallery-index="${index}" data-cursor="확대" aria-label="${alt} 확대 보기"><img src="${optimizedSrc}" alt="${alt}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"></button></figure>`;
     })
     .join('');
 
@@ -227,7 +235,7 @@ const initProjectLightbox = (project) => {
       .map(
         (src, index) => `
 <div class="project-lightbox__slide">
-  <img src="${resolvePath(src)}" alt="${alts[index]}" loading="${index === 0 ? 'eager' : 'lazy'}" draggable="false">
+  <img src="${resolvePath(getOptimizedImageSrc(src))}" alt="${alts[index]}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" draggable="false">
 </div>`.trim(),
       )
       .join('');
@@ -495,10 +503,12 @@ const renderPortfolioCatalog = () => {
       const thumb = getProjectImages(project)[0];
       if (!thumb) return '';
 
+      const optimizedThumb = getOptimizedImageSrc(thumb);
       const loading = index < 3 ? 'eager' : 'lazy';
+      const fetchPriority = index === 0 ? 'high' : 'auto';
       return `
 <a class="portfolio-card reveal" href="${typeof window.pageUrl === "function" ? window.pageUrl(`project/?id=${id}`) : `project/?id=${id}`}" data-cursor="상세 보기">
-  <figure><img src="${thumb}" alt="${project.title}" loading="${loading}"><span>${id}</span></figure>
+  <figure><img src="${optimizedThumb}" alt="${project.title}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"><span>${id}</span></figure>
   <div><h2>${project.title}</h2><p>${project.type} · ${project.year}</p></div>
 </a>`.trim();
     })
@@ -635,7 +645,14 @@ const elementProgress = (element, scrollY = window.scrollY) => {
   const rect = element.getBoundingClientRect();
   const virtualTop = rect.top + window.scrollY - scrollY;
   const distance = window.innerHeight * 0.42;
-  return clamp((window.innerHeight * 0.88 - virtualTop) / distance);
+  const scrollProgress = clamp((window.innerHeight * 0.88 - virtualTop) / distance);
+
+  if (rect.bottom <= 0 || rect.top >= window.innerHeight) return scrollProgress;
+
+  const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+  const visibilityProgress = clamp(visibleHeight / Math.max(rect.height, 1));
+
+  return Math.max(scrollProgress, visibilityProgress);
 };
 
 const renderScrollAnimations = (time = performance.now()) => {
@@ -663,8 +680,16 @@ const renderScrollAnimations = (time = performance.now()) => {
     revealEntries.forEach(({ item, delay }) => {
       const rawProgress = elementProgress(item, renderedScrollY);
       const progress = easeOut(clamp((rawProgress - delay) / Math.max(1 - delay, 0.1)));
-      item.style.opacity = progress.toFixed(3);
-      item.style.transform = `translate3d(0, ${((1 - progress) * 34).toFixed(2)}px, 0)`;
+      const isFullyRevealed = progress >= 0.98;
+
+      if (isFullyRevealed) {
+        item.style.removeProperty('opacity');
+        item.style.removeProperty('transform');
+      } else {
+        item.style.opacity = progress.toFixed(3);
+        item.style.transform = `translate3d(0, ${((1 - progress) * 34).toFixed(2)}px, 0)`;
+      }
+
       item.classList.toggle('is-revealed', progress > 0.02);
       item.classList.toggle('visible', progress > 0.02);
     });

@@ -10,17 +10,20 @@
   if (!section || !media || !video) return;
 
   const DESKTOP_SOURCES = [
-    'videos/plaster-scroll.mp4',
-    'assets/picture/bg_mix_video.mp4',
+    { src: 'assets/picture/bg_mix_video.mp4', type: 'video/mp4' },
+    { src: 'assets/picture/bg_mix_video-720.mp4', type: 'video/mp4' },
+    { src: 'assets/picture/bg_mix_video-720.webm', type: 'video/webm; codecs="vp9"' },
   ];
   const MOBILE_SOURCES = [
-    'videos/plaster-scroll-mobile.mp4',
-    'assets/picture/bg_mix_video.mp4',
+    { src: 'assets/picture/bg_mix_video.mp4', type: 'video/mp4' },
+    { src: 'assets/picture/bg_mix_video-720.mp4', type: 'video/mp4' },
+    { src: 'assets/picture/bg_mix_video-540.mp4', type: 'video/mp4' },
   ];
-  const POSTER_SOURCES = [
-    'images/plaster-scroll-poster.webp',
-    'assets/picture/bg_mix3.png',
-  ];
+  const POSTER_SOURCES = {
+    desktop: 'assets/picture/bg_mix3-poster.webp',
+    mobile: 'assets/picture/bg_mix3-poster-mobile.webp',
+    fallback: 'assets/picture/bg_mix3.png',
+  };
   const SCROLL_SCRUB = 1.2;
   const SMOOTH_FACTOR = 0.08;
   const SEEK_THRESHOLD = 0.01;
@@ -61,14 +64,14 @@
   };
 
   const initPoster = () => {
-    applyPoster(POSTER_SOURCES[0]);
+    applyPoster(MOBILE_MQ.matches ? POSTER_SOURCES.mobile : POSTER_SOURCES.desktop);
   };
 
   const setPosterFallback = () => {
     media.classList.add('is-video-fallback');
     media.classList.remove('is-video-ready');
     video.classList.remove('is-ready');
-    applyPoster(POSTER_SOURCES[POSTER_SOURCES.length - 1]);
+    applyPoster(POSTER_SOURCES.fallback);
   };
 
   const markVideoReady = () => {
@@ -94,6 +97,10 @@
     destroyScrollScrub();
     resizeObserver?.disconnect();
     resizeObserver = null;
+    video.pause();
+    video.removeAttribute('src');
+    while (video.firstChild) video.removeChild(video.firstChild);
+    video.load();
   };
 
   const updateVideoTime = () => {
@@ -128,11 +135,39 @@
     updateVideoTime();
   };
 
-  const pickSourceList = () => (MOBILE_MQ.matches ? MOBILE_SOURCES : DESKTOP_SOURCES);
+  const pickSourceList = () => {
+    const sources = MOBILE_MQ.matches ? MOBILE_SOURCES : DESKTOP_SOURCES;
+    const playableSources = sources.filter(({ type }) => !type || !video.canPlayType || video.canPlayType(type));
+    return (playableSources.length ? playableSources : sources).map(({ src }) => src);
+  };
+
+  const isMobilePlayback = () => MOBILE_MQ.matches;
+
+  const bindMobilePlayback = () => {
+    destroyScrollScrub();
+    section.classList.add('is-mobile-playback');
+
+    video.loop = true;
+    video.setAttribute('loop', '');
+    video.currentTime = 0;
+    video.preload = 'auto';
+
+    const tryPlay = () => {
+      video.play().catch(() => {});
+    };
+
+    if (video.readyState >= 2) tryPlay();
+    else video.addEventListener('canplay', tryPlay, { once: true });
+  };
 
   const bindScrollScrub = () => {
+    if (isMobilePlayback()) return;
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
     if (reduceMotion) return;
+
+    section.classList.remove('is-mobile-playback');
+    video.loop = false;
+    video.removeAttribute('loop');
 
     destroyScrollScrub();
 
@@ -167,13 +202,18 @@
     }
 
     markVideoReady();
+
+    if (reduceMotion) return;
+
+    if (isMobilePlayback()) {
+      bindMobilePlayback();
+      return;
+    }
+
     video.pause();
     targetTime = 0;
     smoothTime = 0;
     video.currentTime = 0;
-
-    if (reduceMotion) return;
-
     bindScrollScrub();
   };
 
@@ -213,6 +253,7 @@
     video.addEventListener('loadedmetadata', onReady);
     video.addEventListener('error', onError, { once: true });
     video.src = resolvePath(src);
+    video.preload = 'metadata';
     video.load();
   };
 
@@ -224,6 +265,10 @@
 
   initPoster();
 
+  if (isMobilePlayback()) {
+    section.classList.add('is-mobile-playback');
+  }
+
   video.muted = true;
   video.playsInline = true;
   video.setAttribute('playsinline', '');
@@ -231,12 +276,66 @@
   video.controls = false;
   video.disablePictureInPicture = true;
   video.setAttribute('controlsList', 'nodownload nofullscreen noremoteplayback');
-  video.setAttribute('preload', 'auto');
+  video.setAttribute('preload', 'metadata');
   video.pause();
 
-  startLoading();
+  if (reduceMotion) {
+    setPosterFallback();
+    return;
+  }
+
+  const updateHeroPastState = () => {
+    const past = section.getBoundingClientRect().bottom <= 0;
+    section.classList.toggle('is-past', past);
+
+    const cue = document.querySelector('[data-hero-scroll-cue]');
+    if (cue && isMobilePlayback()) {
+      cue.classList.toggle('is-hidden', window.scrollY > 32 || past);
+    }
+  };
+
+  updateHeroPastState();
+  window.addEventListener('scroll', updateHeroPastState, { passive: true });
+  window.addEventListener('resize', updateHeroPastState);
+
+  const scheduleVideoLoad = () => {
+    const load = () => {
+      if (activeSrc) return;
+      startLoading();
+    };
+    const afterLoad = () => {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(load, { timeout: 1500 });
+        return;
+      }
+      window.setTimeout(load, 500);
+    };
+    const afterDomReady = () => {
+      window.setTimeout(load, 1800);
+    };
+
+    if (document.readyState === 'complete') {
+      afterLoad();
+      return;
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', afterDomReady, { once: true });
+    } else {
+      afterDomReady();
+    }
+
+    window.addEventListener('load', afterLoad, { once: true });
+  };
+
+  scheduleVideoLoad();
 
   MOBILE_MQ.addEventListener('change', () => {
+    initPoster();
+    section.classList.remove('is-mobile-playback');
+    video.loop = false;
+    video.removeAttribute('loop');
+    video.pause();
     activeSrc = '';
     startLoading();
   });

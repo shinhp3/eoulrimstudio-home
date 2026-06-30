@@ -1,5 +1,83 @@
 /* 소개 페이지 반응형 */
 
+@media (max-width: 768px) {
+  .about-page {
+    isolation: isolate;
+  }
+
+  .hero.scroll-video-section,
+  .hero.scroll-video-section.is-mobile-playback {
+    --scroll-video-height: 100svh;
+    --hero-video-height: 88svh;
+    height: var(--scroll-video-height);
+    min-height: 100vh;
+    z-index: 0;
+  }
+
+  .hero.scroll-video-section.is-mobile-playback .scroll-video-sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: var(--hero-video-height);
+    min-height: 0;
+    transform: none;
+    z-index: 0;
+  }
+
+  .about-page main > section:not(.hero) {
+    z-index: 2;
+  }
+
+  .hero.scroll-video-section.is-mobile-playback .hero-bg {
+    object-position: center 35%;
+    transform: translate3d(var(--mx), var(--my), 0);
+  }
+
+  .hero-scroll-cue {
+    position: fixed;
+    top: var(--hero-video-height);
+    left: 0;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100svh - var(--hero-video-height));
+    background: var(--bg);
+    transition: opacity 0.35s var(--ease-gentle), visibility 0.35s var(--ease-gentle);
+  }
+
+  .hero-scroll-cue.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .hero-scroll-cue__chevron {
+    display: block;
+    width: 11px;
+    height: 11px;
+    border-right: 2px solid #4a4a4a;
+    border-bottom: 2px solid #4a4a4a;
+    transform: rotate(-135deg);
+    animation: heroScrollCueBounce 1.7s var(--ease-gentle) infinite;
+  }
+
+  @keyframes heroScrollCueBounce {
+    0%,
+    100% {
+      transform: rotate(-135deg) translateY(0);
+      opacity: 0.72;
+    }
+
+    50% {
+      transform: rotate(-135deg) translateY(-7px);
+      opacity: 1;
+    }
+  }
+}
+
 @media (max-width: 900px) {
   .hero h1 {
     font-size: clamp(2.8rem, 12vw, 4.8rem);
@@ -84,7 +162,7 @@
   .hero-bg {
     object-position: center 35%;
     animation: none;
-    transform: translate3d(var(--mx), var(--my), 0) scale(1);
+    transform: translate3d(var(--mx), var(--my), 0);
   }
 
   .section-head {
@@ -192,6 +270,11 @@
     animation: none;
     transform: none;
     opacity: 0;
+  }
+
+  .hero-scroll-cue__chevron {
+    animation: none;
+    opacity: 0.9;
   }
 
   .hero-media.is-video-fallback::before,

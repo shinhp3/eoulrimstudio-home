@@ -13,13 +13,14 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/common.css?v=13">
   <link rel="stylesheet" href="css/responsive/common.css?v=13">
-  <link rel="stylesheet" href="css/about.css?v=31">
-  <link rel="stylesheet" href="css/responsive/about.css?v=20">
+  <link rel="stylesheet" href="css/about.css?v=34">
+  <link rel="stylesheet" href="css/responsive/about.css?v=28">
+  <link rel="preload" as="image" href="assets/picture/bg_mix3-poster.webp" fetchpriority="high">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script src="js/layout.js" defer></script>
-  <script src="script.js" defer></script>
-  <script src="js/about-scroll-video.js" defer></script>
+  <script src="script.js?v=3" defer></script>
+  <script src="js/about-scroll-video.js?v=11" defer></script>
 </head>
 <body class="about-page">
   <a class="skip-link" href="#main">본문 바로가기</a>
@@ -36,8 +37,8 @@
             class="hero-bg"
             muted
             playsinline
-            preload="auto"
-            poster="assets/picture/bg_mix3.png"
+            preload="metadata"
+            poster="assets/picture/bg_mix3-poster.webp"
           ></video>
         </figure>
         <div class="hero-shade" aria-hidden="true"></div>
@@ -45,6 +46,9 @@
           <h1 id="hero-title"><span>석고를</span><span>더 쉽게.</span></h1>
           <p class="hero-lead">도예 작업 경험을 바탕으로<br> 사용하기 편리한 석고몰드를<br> 설계하고 제작합니다.</p>
         </div>
+      </div>
+      <div class="hero-scroll-cue" data-hero-scroll-cue aria-hidden="true">
+        <span class="hero-scroll-cue__chevron"></span>
       </div>
     </section>
 
@@ -74,7 +78,7 @@
     </section>
 
     <section class="studio" id="studio" aria-labelledby="studio-title">
-      <div class="studio-image reveal"><img src="assets/picture/fail.jpg" alt="어울림 스튜디오 작업 장면" loading="lazy"><span>어울림 스튜디오 / 부산</span></div>
+      <div class="studio-image reveal"><img src="assets/picture/fail.webp" alt="어울림 스튜디오 작업 장면" width="900" height="1200" loading="lazy" decoding="async"><span>어울림 스튜디오 / 부산</span></div>
       <div class="studio-copy section-pad reveal">
         <p class="eyebrow">어울림 소개</p>
         <h2 id="studio-title">우리는 같은 문제를<br>겪어왔습니다.</h2>
@@ -107,23 +111,23 @@
       <div class="section-head compact reveal"><div><p class="eyebrow">형태에서 쓰임까지</p><h2 id="process-title">제작 과정</h2></div><p class="section-intro">아이디어가 안정적인 작업 도구가 되기까지, 다섯 단계로 명확하게 진행합니다.</p></div>
       <ol class="process-list">
         <li class="process-step reveal">
-          <figure><img src="assets/picture/company_1.png" alt="제작 상담과 시안 확인 과정" loading="eager"></figure>
+          <figure><img src="assets/picture/company_1.webp" alt="제작 상담과 시안 확인 과정" width="900" height="675" loading="lazy" decoding="async"></figure>
           <div><span>01</span><h3>시안 접수</h3><p>도면 · 스케치 · 원형을 바탕으로 제작 방향과 필요한 몰드 구조를 정리합니다.</p></div>
         </li>
         <li class="process-step reveal">
-          <figure><img src="assets/picture/company_2.png" alt="3D 모델링으로 구조를 설계하는 과정" loading="eager"></figure>
+          <figure><img src="assets/picture/company_2.webp" alt="3D 모델링으로 구조를 설계하는 과정" width="900" height="675" loading="lazy" decoding="async"></figure>
           <div><span>02</span><h3>3D 모델링</h3><p>원형의 비례와 분할선, 주입과 탈형 방향을 디지털 데이터로 검토합니다.</p></div>
         </li>
         <li class="process-step reveal">
-          <figure><img src="assets/picture/company_3.png" alt="정밀 원형을 출력하고 확인하는 과정" loading="eager"></figure>
+          <figure><img src="assets/picture/company_3.webp" alt="정밀 원형을 출력하고 확인하는 과정" width="900" height="675" loading="lazy" decoding="async"></figure>
           <div><span>03</span><h3>3D 출력</h3><p>확정된 데이터를 출력해 실제 크기와 표면 상태를 확인하고 보정합니다.</p></div>
         </li>
         <li class="process-step reveal">
-          <figure><img src="assets/picture/company_4.png" alt="석고몰드 분할과 제작 과정" loading="eager"></figure>
+          <figure><img src="assets/picture/company_4.webp" alt="석고몰드 분할과 제작 과정" width="900" height="675" loading="lazy" decoding="async"></figure>
           <div><span>04</span><h3>몰드 제작</h3><p>작업 흐름에 맞춰 분할하고 석고 성형, 접합면 정리, 건조 과정을 진행합니다.</p></div>
         </li>
         <li class="process-step reveal">
-          <figure><img src="assets/picture/company_5.png" alt="완성된 몰드를 테스트하고 납품하는 과정" loading="eager"></figure>
+          <figure><img src="assets/picture/company_5.webp" alt="완성된 몰드를 테스트하고 납품하는 과정" width="900" height="675" loading="lazy" decoding="async"></figure>
           <div><span>05</span><h3>테스트 · 납품</h3><p>주입과 탈형을 점검한 뒤 사용 설명과 함께 안전하게 포장해 전달합니다.</p></div>
         </li>
       </ol>

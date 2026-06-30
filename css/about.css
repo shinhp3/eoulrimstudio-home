@@ -139,7 +139,20 @@
   position: relative;
   z-index: 2;
   isolation: isolate;
-  background-color: var(--bg);
+  transform: translateZ(0);
+}
+
+.hero.scroll-video-section.is-past .scroll-video-sticky {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.45s var(--ease-gentle),
+    visibility 0.45s var(--ease-gentle);
+}
+
+.hero-scroll-cue {
+  display: none;
+  pointer-events: none;
 }
 
 .hero h1 {
