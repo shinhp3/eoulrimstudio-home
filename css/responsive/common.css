@@ -5,6 +5,15 @@
 }
 
 @media (max-width: 900px) {
+  .site-header .desktop-nav {
+    justify-self: end;
+  }
+
+  .site-header .header-contact {
+    grid-column: 3;
+    justify-self: end;
+  }
+
   .cursor {
     display: none;
   }

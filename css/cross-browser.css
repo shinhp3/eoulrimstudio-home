@@ -1,0 +1,113 @@
+/* 브라우저 간 UI·정렬 보정 */
+
+:root {
+  --vh-full: 100vh;
+  --vh-88: 88vh;
+}
+
+@supports (height: 100svh) {
+  :root {
+    --vh-full: 100svh;
+    --vh-88: 88svh;
+  }
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.site-header.scrolled,
+.site-header.inner-header {
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.site-header .brand {
+  grid-column: 1;
+  justify-self: start;
+  align-self: center;
+}
+
+.site-header .desktop-nav {
+  grid-column: 2;
+  justify-self: center;
+  align-self: center;
+  min-width: 0;
+}
+
+.site-header .header-contact {
+  grid-column: 3;
+  justify-self: end;
+  align-self: center;
+}
+
+.site-header .menu-button {
+  grid-column: 3;
+  justify-self: end;
+  align-self: center;
+}
+
+.desktop-nav a,
+.header-contact,
+.nav-link--contact-bar {
+  line-height: 1.2;
+}
+
+:is(
+  .site-header,
+  .desktop-nav,
+  .portfolio-heading,
+  .portfolio-catalog,
+  .portfolio-card,
+  .section-head,
+  .intro-grid,
+  .studio,
+  .principle-list,
+  .process-list,
+  .detail-heading,
+  .detail-gallery
+) {
+  min-width: 0;
+}
+
+.site-footer,
+.inner-footer {
+  align-items: center;
+}
+
+@supports not (text-wrap: balance) {
+  :where(h1, h2, h3) {
+    text-wrap: wrap;
+  }
+}
+
+@supports not (text-wrap: pretty) {
+  :where(p, li, dd) {
+    text-wrap: wrap;
+  }
+}

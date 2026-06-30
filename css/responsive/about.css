@@ -7,8 +7,8 @@
 
   .hero.scroll-video-section,
   .hero.scroll-video-section.is-mobile-playback {
-    --scroll-video-height: 100svh;
-    --hero-video-height: 88svh;
+    --scroll-video-height: var(--vh-full);
+    --hero-video-height: var(--vh-88);
     height: var(--scroll-video-height);
     min-height: 100vh;
     z-index: 0;
@@ -44,7 +44,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: calc(100svh - var(--hero-video-height));
+    height: calc(var(--vh-full) - var(--hero-video-height));
     background: var(--bg);
     transition: opacity 0.35s var(--ease-gentle), visibility 0.35s var(--ease-gentle);
   }
