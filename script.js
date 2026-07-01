@@ -164,47 +164,9 @@ if (menuButton && mobileMenu) {
   }));
 }
 
-const projectData = {
-  '01': {
-    title: '둥근 형태를 살린 도자기 괄사',
-    year: '2026',
-    type: '솔리드 캐스팅',
-    service: '3D 모델링 · 몰드 제작 · 테스트',
-    images: [
-      'assets/picture/pj_1/pj_1_main.png',
-      'assets/picture/pj_1/pj_1_sub_1.png',
-      'assets/picture/pj_1/pj_1_sub_2.png',
-    ],
-    kicker: '손에 닿는 곡선을 정확하게 구현합니다.',
-    description: '곡면의 형태와 탈형 방향을 고려해 제작한 석고몰드입니다. 솔리드 캐스팅을 위해 별도의 주입구를 설계했으며, 실제 캐스팅 테스트를 통해 주입과 탈형 과정을 확인했습니다.'
-  },
-  '02': {
-    title: '분할선이 없는 꽃 찻잔',
-    year: '2026',
-    type: '최소 분할 몰드 · 분할선 설계',
-    service: '원형 제작 · 분할선 설계 · 표면 정리',
-    images: [
-      'assets/picture/pj_2/pj_2_main.png',
-      'assets/picture/pj_2/pj_2_sub.png',
-    ],
-    kicker: '분할선이 남지않도록 최소한의 피스',
-    description: '원물의 수축률을 계산해 몰드 크기와 구조를 설계했습니다. 표면 문양을 최대한 온전히 유지할 수 있도록 분할 위치를 조정하고, 분할선이 기물의 주요 표면에 남지 않도록 2피스 구조로 제작했습니다.'
-  },
-  '03': {
-    title: '음각이 깔끔하게 표현되는 작품',
-    year: '2026',
-    type: '양각 표현 · 분할 설계',
-    service: '양각 표현 테스트 · 표면 품질 검토',
-    images: [
-      'assets/picture/pj_3/pj_3_main.png',
-      'assets/picture/pj_3/pj_3_sub_1.png',
-      'assets/picture/pj_3/pj_3_sub_2.png',
-      'assets/picture/pj_3/pj_3_sub_3.png',
-    ],
-    kicker: '양각 캐릭터의 형태를 선명하게 유지합니다.',
-    description: '표면의 양각 캐릭터가 선명하게 구현되도록 몰드 구조와 분할 위치를 설계했습니다.'
-  },
-};
+let portfolioItems = [];
+
+const getProjectById = (id) => portfolioItems.find((item) => item.id === id);
 
 const getProjectImages = (project) =>
   Array.isArray(project?.images) ? project.images.filter(Boolean) : [];
@@ -540,10 +502,11 @@ const renderPortfolioCatalog = () => {
   const catalog = document.querySelector('[data-portfolio-catalog]');
   if (!catalog) return;
 
-  catalog.innerHTML = Object.entries(projectData)
-    .map(([id, project], index) => {
+  catalog.innerHTML = portfolioItems
+    .map((project, index) => {
+      const id = project.id;
       const thumb = getProjectImages(project)[0];
-      if (!thumb) return '';
+      if (!id || !thumb) return '';
 
       const optimizedThumb = getOptimizedImageSrc(thumb);
       const loading = index < 3 ? 'eager' : 'lazy';
@@ -566,9 +529,11 @@ const initProjectDetailPage = () => {
   if (!detailPage) return;
 
   const id = new URLSearchParams(window.location.search).get('id') || '01';
-  const keys = Object.keys(projectData);
-  const safeId = projectData[id] ? id : '01';
-  const project = projectData[safeId];
+  const keys = portfolioItems.map((item) => item.id);
+  const fallbackId = keys[0] || '01';
+  const safeId = getProjectById(id) ? id : fallbackId;
+  const project = getProjectById(safeId);
+  if (!project) return;
   const nextId = keys[(keys.indexOf(safeId) + 1) % keys.length];
   const setText = (selector, value) => {
     const element = document.querySelector(selector);
@@ -590,7 +555,7 @@ const initProjectDetailPage = () => {
       typeof window.pageUrl === "function"
         ? window.pageUrl(`project/?id=${nextId}`)
         : `project/?id=${nextId}`;
-    nextProject.setAttribute('aria-label', `다음 프로젝트: ${projectData[nextId].title}`);
+    nextProject.setAttribute('aria-label', `다음 프로젝트: ${getProjectById(nextId)?.title || ''}`);
   }
   document.title = `${project.title} | 어울림`;
 };
@@ -630,18 +595,30 @@ const initCatalogViewToggle = () => {
   syncToggle();
 };
 
-renderPortfolioCatalog();
-initProjectDetailPage();
-initCatalogViewToggle();
+const needsPortfolioData = Boolean(
+  document.querySelector('[data-portfolio-catalog], [data-project-detail]'),
+);
 
-const revealItems = [...document.querySelectorAll('.reveal')];
+const loadPortfolioData = async () => {
+  const response = await fetch('portfolio.json');
+  if (!response.ok) throw new Error(`portfolio.json HTTP ${response.status}`);
+  const data = await response.json();
+  portfolioItems = Array.isArray(data?.items) ? data.items : [];
+};
+
+let revealItems = [];
+let revealEntries = [];
 const reversibleReveal = document.body.classList.contains('about-page');
-const revealEntries = revealItems.map((item) => {
-  const parent = item.parentElement;
-  const sequentialParent = parent && parent.matches('.intro-grid, .principle-list, .process-list, .stats');
-  const delay = sequentialParent ? [...parent.children].indexOf(item) * 0.08 : 0;
-  return { item, delay };
-});
+
+const collectRevealState = () => {
+  revealItems = [...document.querySelectorAll('.reveal')];
+  revealEntries = revealItems.map((item) => {
+    const parent = item.parentElement;
+    const sequentialParent = parent && parent.matches('.intro-grid, .principle-list, .process-list, .stats');
+    const delay = sequentialParent ? [...parent.children].indexOf(item) * 0.08 : 0;
+    return { item, delay };
+  });
+};
 const projects = [...document.querySelectorAll('.project')];
 const counters = [...document.querySelectorAll('[data-count]')];
 const studioImage = document.querySelector('.studio-image');
@@ -681,7 +658,24 @@ const initRevealAnimations = () => {
   revealItems.forEach((item) => revealObserver.observe(item));
 };
 
-initRevealAnimations();
+const bootstrap = async () => {
+  if (needsPortfolioData) {
+    try {
+      await loadPortfolioData();
+    } catch (error) {
+      console.error('portfolio.json 로드 실패:', error);
+      portfolioItems = [];
+    }
+
+    renderPortfolioCatalog();
+    initProjectDetailPage();
+    initCatalogViewToggle();
+  }
+
+  collectRevealState();
+  initRevealAnimations();
+  renderScrollAnimations(performance.now());
+};
 
 const elementProgress = (element, scrollY = window.scrollY) => {
   const rect = element.getBoundingClientRect();
@@ -776,7 +770,7 @@ const requestScrollRender = () => {
 
 window.addEventListener('scroll', requestScrollRender, { passive: true });
 window.addEventListener('resize', requestScrollRender);
-renderScrollAnimations(performance.now());
+bootstrap();
 
 if (!reduceMotion && finePointer && cursor) {
   document.documentElement.classList.add('custom-cursor');
