@@ -49,7 +49,11 @@
       "year": "2026",
       "type": "test",
       "service": "test,test,test",
-      "images": [],
+      "images": [
+        "assets/picture/pj_04/pj_4_main.png",
+        "assets/picture/pj_04/pj_4_sub_1.png",
+        "assets/picture/pj_04/pj_4_sub_2.png"
+      ],
       "kicker": "test",
       "description": "test",
       "registeredAt": "2026-07-01"
