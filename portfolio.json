@@ -42,21 +42,6 @@
       "kicker": "손에 닿는 곡선을 정확하게 구현합니다.",
       "description": "곡면의 형태와 탈형 방향을 고려해 제작한 석고몰드입니다. 솔리드 캐스팅을 위해 별도의 주입구를 설계했으며, 실제 캐스팅 테스트를 통해 주입과 탈형 과정을 확인했습니다.",
       "hidden": true
-    },
-    {
-      "id": "04",
-      "title": "test",
-      "year": "test",
-      "type": "test",
-      "service": "test",
-      "images": [
-        "assets/picture/pj_04/pj_4_main.png",
-        "assets/picture/pj_04/pj_4_sub_1.png",
-        "assets/picture/pj_04/pj_4_sub_2.png"
-      ],
-      "kicker": "test",
-      "description": "test",
-      "registeredAt": "2026-07-01"
     }
   ]
 }
