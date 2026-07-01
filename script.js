@@ -176,16 +176,6 @@ const getDisplayNumberByProjectId = (id) => {
   return index >= 0 ? getPortfolioDisplayNumber(index) : id;
 };
 
-const formatRegisteredDate = (project) => {
-  const raw = project?.registeredAt;
-  if (raw) {
-    const match = String(raw).match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (match) return `${match[1]}.${match[2]}.${match[3]}`;
-    return String(raw);
-  }
-  return project?.year ? String(project.year) : '';
-};
-
 const getProjectById = (id) => getVisiblePortfolioItems().find((item) => item.id === id);
 
 const getProjectImages = (project) =>
@@ -561,9 +551,7 @@ const initProjectDetailPage = () => {
   };
 
   renderProjectGallery(project);
-  const dateText = formatRegisteredDate(project);
-  const metaEl = document.querySelector('[data-project-meta]');
-  if (metaEl) metaEl.textContent = dateText ? `${dateText} · 주요 작업` : '주요 작업';
+  setText('[data-project-number]', getDisplayNumberByProjectId(safeId));
   setText('[data-project-title]', project.title);
   setText('[data-project-year]', project.year);
   setText('[data-project-type]', project.type);
