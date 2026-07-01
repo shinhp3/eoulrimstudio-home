@@ -171,6 +171,11 @@ const getVisiblePortfolioItems = () => portfolioItems.filter(isPortfolioItemVisi
 
 const getPortfolioDisplayNumber = (index) => String(index + 1).padStart(2, '0');
 
+const getDisplayNumberByProjectId = (id) => {
+  const index = getVisiblePortfolioItems().findIndex((item) => item.id === id);
+  return index >= 0 ? getPortfolioDisplayNumber(index) : id;
+};
+
 const formatRegisteredDate = (project) => {
   const raw = project?.registeredAt;
   if (raw) {
