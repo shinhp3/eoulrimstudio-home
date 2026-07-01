@@ -186,6 +186,12 @@ const getOptimizedImageSrc = (src) =>
     ? src.replace(/\.(png|jpe?g)$/i, '.webp')
     : src;
 
+const imgFallbackAttr = (optimizedSrc, originalSrc) => {
+  if (optimizedSrc === originalSrc) return '';
+  const fallback = resolvePath(originalSrc).replace(/"/g, '&quot;');
+  return ` data-fallback="${fallback}" onerror="if(this.dataset.fallback){this.src=this.dataset.fallback;delete this.dataset.fallback}"`;
+};
+
 const getGalleryColumnCount = (count) => {
   if (count <= 1) return 1;
   if (count === 2) return 2;
@@ -208,7 +214,7 @@ const renderProjectGallery = (project) => {
       const optimizedSrc = getOptimizedImageSrc(src);
       const loading = index === 0 ? 'eager' : 'lazy';
       const fetchPriority = index === 0 ? 'high' : 'auto';
-      return `<figure${figureClass}><button type="button" class="detail-gallery__trigger" data-gallery-index="${index}" data-cursor="확대" aria-label="${alt} 확대 보기"><img src="${optimizedSrc}" alt="${alt}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"></button></figure>`;
+      return `<figure${figureClass}><button type="button" class="detail-gallery__trigger" data-gallery-index="${index}" data-cursor="확대" aria-label="${alt} 확대 보기"><img src="${optimizedSrc}" alt="${alt}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"${imgFallbackAttr(optimizedSrc, src)}></button></figure>`;
     })
     .join('');
 
@@ -249,7 +255,7 @@ const initProjectLightbox = (project) => {
       .map(
         (src, index) => `
 <div class="project-lightbox__slide">
-  <img src="${resolvePath(getOptimizedImageSrc(src))}" alt="${alts[index]}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" draggable="false">
+  <img src="${resolvePath(getOptimizedImageSrc(src))}" alt="${alts[index]}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" draggable="false"${imgFallbackAttr(getOptimizedImageSrc(src), src)}>
 </div>`.trim(),
       )
       .join('');
@@ -523,7 +529,7 @@ const renderPortfolioCatalog = () => {
       const fetchPriority = index === 0 ? 'high' : 'auto';
       return `
 <a class="portfolio-card reveal" href="${typeof window.pageUrl === "function" ? window.pageUrl(`project/?id=${id}`) : `project/?id=${id}`}" data-cursor="상세 보기">
-  <figure><img src="${optimizedThumb}" alt="${project.title}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"><span>${getPortfolioDisplayNumber(index)}</span></figure>
+  <figure><img src="${optimizedThumb}" alt="${project.title}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"${imgFallbackAttr(optimizedThumb, thumb)}><span>${getPortfolioDisplayNumber(index)}</span></figure>
   <div><h2>${project.title}</h2><p>${project.type} · ${project.year}</p></div>
 </a>`.trim();
     })
