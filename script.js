@@ -165,6 +165,7 @@ if (menuButton && mobileMenu) {
 }
 
 let portfolioItems = [];
+let portfolioVersion = '';
 
 const isPortfolioItemVisible = (item) => !item?.hidden;
 const getVisiblePortfolioItems = () => portfolioItems.filter(isPortfolioItemVisible);
@@ -186,9 +187,17 @@ const getOptimizedImageSrc = (src) =>
     ? src.replace(/\.(png|jpe?g)$/i, '.webp')
     : src;
 
+const withPortfolioCacheBust = (src) => {
+  if (!src || !portfolioVersion) return src;
+  const sep = src.includes('?') ? '&' : '?';
+  return `${src}${sep}v=${portfolioVersion}`;
+};
+
+const getPortfolioImageSrc = (src) => withPortfolioCacheBust(getOptimizedImageSrc(src));
+
 const imgFallbackAttr = (optimizedSrc, originalSrc) => {
   if (optimizedSrc === originalSrc) return '';
-  const fallback = resolvePath(originalSrc).replace(/"/g, '&quot;');
+  const fallback = resolvePath(withPortfolioCacheBust(originalSrc)).replace(/"/g, '&quot;');
   return ` data-fallback="${fallback}" onerror="if(this.dataset.fallback){this.src=this.dataset.fallback;delete this.dataset.fallback}"`;
 };
 
@@ -211,7 +220,7 @@ const renderProjectGallery = (project) => {
         index === 0
           ? `${project.title} 대표 이미지`
           : `${project.title} 이미지 ${index + 1}`;
-      const optimizedSrc = getOptimizedImageSrc(src);
+      const optimizedSrc = getPortfolioImageSrc(src);
       const loading = index === 0 ? 'eager' : 'lazy';
       const fetchPriority = index === 0 ? 'high' : 'auto';
       return `<figure${figureClass}><button type="button" class="detail-gallery__trigger" data-gallery-index="${index}" data-cursor="확대" aria-label="${alt} 확대 보기"><img src="${optimizedSrc}" alt="${alt}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"${imgFallbackAttr(optimizedSrc, src)}></button></figure>`;
@@ -255,7 +264,7 @@ const initProjectLightbox = (project) => {
       .map(
         (src, index) => `
 <div class="project-lightbox__slide">
-  <img src="${resolvePath(getOptimizedImageSrc(src))}" alt="${alts[index]}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" draggable="false"${imgFallbackAttr(getOptimizedImageSrc(src), src)}>
+  <img src="${resolvePath(getPortfolioImageSrc(src))}" alt="${alts[index]}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" draggable="false"${imgFallbackAttr(getPortfolioImageSrc(src), src)}>
 </div>`.trim(),
       )
       .join('');
@@ -524,7 +533,7 @@ const renderPortfolioCatalog = () => {
       const thumb = getProjectImages(project)[0];
       if (!id || !thumb) return '';
 
-      const optimizedThumb = getOptimizedImageSrc(thumb);
+      const optimizedThumb = getPortfolioImageSrc(thumb);
       const loading = index < 3 ? 'eager' : 'lazy';
       const fetchPriority = index === 0 ? 'high' : 'auto';
       return `
@@ -616,8 +625,11 @@ const needsPortfolioData = Boolean(
 );
 
 const loadPortfolioData = async () => {
-  const response = await fetch('portfolio.json');
+  const response = await fetch(`portfolio.json?_=${Date.now()}`, { cache: 'no-store' });
   if (!response.ok) throw new Error(`portfolio.json HTTP ${response.status}`);
+  const etag = response.headers.get('etag');
+  const modified = response.headers.get('last-modified');
+  portfolioVersion = encodeURIComponent(etag || modified || String(Date.now()));
   const data = await response.json();
   portfolioItems = Array.isArray(data?.items) ? data.items : [];
 };
