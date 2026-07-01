@@ -166,7 +166,17 @@ if (menuButton && mobileMenu) {
 
 let portfolioItems = [];
 
-const getProjectById = (id) => portfolioItems.find((item) => item.id === id);
+const isPortfolioItemVisible = (item) => !item?.hidden;
+const getVisiblePortfolioItems = () => portfolioItems.filter(isPortfolioItemVisible);
+
+const getPortfolioDisplayNumber = (index) => String(index + 1).padStart(2, '0');
+
+const getDisplayNumberByProjectId = (id) => {
+  const index = getVisiblePortfolioItems().findIndex((item) => item.id === id);
+  return index >= 0 ? getPortfolioDisplayNumber(index) : id;
+};
+
+const getProjectById = (id) => getVisiblePortfolioItems().find((item) => item.id === id);
 
 const getProjectImages = (project) =>
   Array.isArray(project?.images) ? project.images.filter(Boolean) : [];
@@ -502,7 +512,7 @@ const renderPortfolioCatalog = () => {
   const catalog = document.querySelector('[data-portfolio-catalog]');
   if (!catalog) return;
 
-  catalog.innerHTML = portfolioItems
+  catalog.innerHTML = getVisiblePortfolioItems()
     .map((project, index) => {
       const id = project.id;
       const thumb = getProjectImages(project)[0];
@@ -513,7 +523,7 @@ const renderPortfolioCatalog = () => {
       const fetchPriority = index === 0 ? 'high' : 'auto';
       return `
 <a class="portfolio-card reveal" href="${typeof window.pageUrl === "function" ? window.pageUrl(`project/?id=${id}`) : `project/?id=${id}`}" data-cursor="상세 보기">
-  <figure><img src="${optimizedThumb}" alt="${project.title}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"><span>${id}</span></figure>
+  <figure><img src="${optimizedThumb}" alt="${project.title}" loading="${loading}" decoding="async" fetchpriority="${fetchPriority}"><span>${getPortfolioDisplayNumber(index)}</span></figure>
   <div><h2>${project.title}</h2><p>${project.type} · ${project.year}</p></div>
 </a>`.trim();
     })
@@ -529,7 +539,7 @@ const initProjectDetailPage = () => {
   if (!detailPage) return;
 
   const id = new URLSearchParams(window.location.search).get('id') || '01';
-  const keys = portfolioItems.map((item) => item.id);
+  const keys = getVisiblePortfolioItems().map((item) => item.id);
   const fallbackId = keys[0] || '01';
   const safeId = getProjectById(id) ? id : fallbackId;
   const project = getProjectById(safeId);
@@ -541,7 +551,7 @@ const initProjectDetailPage = () => {
   };
 
   renderProjectGallery(project);
-  setText('[data-project-number]', safeId);
+  setText('[data-project-number]', getDisplayNumberByProjectId(safeId));
   setText('[data-project-title]', project.title);
   setText('[data-project-year]', project.year);
   setText('[data-project-type]', project.type);
